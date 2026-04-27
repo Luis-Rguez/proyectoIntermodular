@@ -20,6 +20,14 @@ public class VentanasController {
         alert.show();
     }
 
+    public void ventanaInformation(String titulo, String frase)
+    {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(titulo);
+        alert.setContentText(frase);
+        alert.show();
+    }
+
     public boolean ventanaConfirmacion(String titulo, String frase)
     {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);

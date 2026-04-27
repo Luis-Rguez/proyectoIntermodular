@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.w3c.dom.ls.LSOutput;
 
 @Getter
 @Setter
@@ -38,6 +39,11 @@ public class Usuario {
         this.apellido = apellido;
     }
 
+    public Usuario(int id, String nombre) {
+        this.id = id;
+        this.nombre = nombre;
+    }
+
     public Usuario(int id, String dni, String nombre, String apellido, int edad, String telf, String mail, String pass) {
         this.id = id;
         this.dni = dni;
@@ -47,5 +53,10 @@ public class Usuario {
         this.telf = telf;
         this.mail = mail;
         this.pass = pass;
+    }
+
+    @Override
+    public String toString() {
+        return id + "\t" + nombre + " " + apellido;
     }
 }

@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import lombok.Getter;
 import lombok.Setter;
+import org.example.torneoajedrez.controller.VentanasController;
 import org.example.torneoajedrez.dao.AdminDaoFormatos;
 import org.example.torneoajedrez.dao.AdminDaoPartidas;
 import org.example.torneoajedrez.dao.AdminDaoStaff;
@@ -108,16 +109,37 @@ public static ObservableList<Torneo> cargarTorneosPartidas()
     return listaTorneo;
 }
 
-public static void agregarPartida(Partida partida, int idTorneo, int idArbitro)
+public static void agregarPartida(Partida partida, int idArbitro, int idBlancas, int idNegras)
 {
-    adminDaoPartidas.agregarPartida(partida, idTorneo, idArbitro);
+    try
+    {
+        adminDaoPartidas.agregarPartida(partida, idArbitro);
+
+        //Obtenemos el idPartida de la tabla Partidas que acabamos de crear para usartla en la tabla de Juegan
+        int idPartida = adminDaoPartidas.ultimoIDPartida();
+
+        // ingresamos registro para el jugador de blancas
+        adminDaoPartidas.agregarJuegan(idBlancas, idPartida, "Blancas", partida.getResulBlancas());
+
+        // ingresamos registro para el jugador de negras
+        adminDaoPartidas.agregarJuegan(idNegras, idPartida, "Negras", partida.getResulBlancas());
+
+    } catch(SQLException e) {
+        VentanasController ventana = new VentanasController();
+        ventana.ventanaError("No se ha podido Agregar la Partida \n\nError: \n" + e.getMessage());
+    }
 }
 
-public static ObservableList<Staff> staffTorneoActivo(int idTorneo, String rol)
+    public static ObservableList<Staff> staffTorneoActivo(int idTorneo, String rol)
 {
     return adminDaoStaff.filtroTorneoArbitro(idTorneo, rol);
 }
 
+    public static void borrarPartida(int partida)
+    {
+        adminDaoPartidas.borrarEmparejamiento(partida);
+        cargarTorneosPartidas();
+    }
 
     // ---------------------- TORNEOS -----------------------------------------------------------------------------------
 

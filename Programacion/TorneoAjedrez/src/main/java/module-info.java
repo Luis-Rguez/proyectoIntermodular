@@ -7,7 +7,6 @@ module org.example.torneoajedrez {
     requires java.sql;
     requires java.desktop;
 
-
     opens org.example.torneoajedrez to javafx.fxml;
     exports org.example.torneoajedrez;
     exports org.example.torneoajedrez.controller;

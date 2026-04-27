@@ -13,6 +13,7 @@ import org.example.torneoajedrez.dao.AdminDaoPartidas;
 import org.example.torneoajedrez.model.*;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 
@@ -32,7 +33,7 @@ public class PartidasController implements Initializable {
 
     // Botones
     @FXML
-    private Button btnBorrar, btnEditar, btnEmparejar, btnRegistrar, btnSalir, btnLimpiar;
+    private Button btnBorrar, btnEmparejar, btnRegistrar, btnSalir, btnLimpiar;
 
     //Tabla
     @FXML
@@ -72,9 +73,11 @@ public class PartidasController implements Initializable {
 
     private String pathLogin;
     private VentanasController ventana;
+    private ArrayList<Jugador> filtroJugador;
 
     private AdminDaoPartidas adminDaoPartidas;
-    private Torneo torneo;
+    private Jugador jugadorBlancas;
+    private Jugador jugadorNegras;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle)
@@ -107,18 +110,40 @@ public class PartidasController implements Initializable {
 
         //-------------------------ACCIONES BOTONES----------------------------------------------------
         btnSalir.setOnAction(event -> ventana.cerrarVentana(btnSalir));
-        btnLimpiar.setOnAction(event ->
+
+        btnBorrar.setOnAction(event ->
         {
-            desactivarBotones(true);
-            comboTorneo.getSelectionModel().selectFirst();
-            comboFormato.getSelectionModel().selectFirst();
+            Partida partida = tableViewPartidas.getSelectionModel().getSelectedItem();
+            if(partida.getResulBlancas().equals("Pendiente"))
+            {
+                Datos.borrarPartida(partida.getId());
+                tablaPartidas.remove(partida);
+            } else
+            {
+                ventana.ventanaWarning("¡PARTIDA JUGADA!", "La Partida ya ha sido Jugada.\n\n¡NO SE PUEDE ELIMINAR!");
+            }
+        });
+
+        btnLimpiar.setOnAction(event -> desactivarBotonesLimpiar(true));
+
+        btnEmparejar.setOnAction(event ->
+        {
+            if(comboTorneo.getSelectionModel().getSelectedIndex() !=-1)
+            {
+                emparejar(comboFormato.getSelectionModel().getSelectedItem().getIdFormatoTorneo());
+            } else
+            {
+                ventana.ventanaWarning("¡Cuidado!", "Seleccione un Torneo y un Formato de Torneo primero");
+            }
         });
 
         btnRegistrar.setOnAction(event ->
-        {
-            registrarPartida();
-        });
-
+                {
+                    registrarPartida();
+                    btnRegistrar.disableProperty().set(true);
+                    editBlancas.setText("");
+                    editNegras.setText("");
+                });
 
         //---------------------ACIONES TABLA Y COMBO--------------------------------------------------------
         comboTorneo.setOnAction(event ->
@@ -159,15 +184,11 @@ public class PartidasController implements Initializable {
             }
         });
 
-        btnBorrar.setOnAction(event ->
-        {
-            Partida partida = tableViewPartidas.getSelectionModel().getSelectedItem();
-
-        });
-
         tableViewPartidas.setOnMouseClicked(event ->
         {
-            desactivarBotones(false);
+            desactivarBotonesLimpiar(false);
+            editBlancas.setText(tableViewPartidas.getSelectionModel().getSelectedItem().getBlancas());
+            editNegras.setText(tableViewPartidas.getSelectionModel().getSelectedItem().getNegras());
         });
     }
 
@@ -188,7 +209,10 @@ public class PartidasController implements Initializable {
     {
         pathLogin = "login-view.fxml";
         ventana = new VentanasController();
+        jugadorBlancas = new Jugador();
+        jugadorNegras = new Jugador();
         adminDaoPartidas = new AdminDaoPartidas();
+        filtroJugador = new ArrayList<>();
         tablaPartidas = FXCollections.observableArrayList();
         mesa = new SpinnerValueFactory.IntegerSpinnerValueFactory(1,20,1,1);
 
@@ -199,12 +223,14 @@ public class PartidasController implements Initializable {
         listaFormato = FXCollections.observableArrayList();
     }
 
-    private void desactivarBotones(boolean desactivar)
+    private void desactivarBotonesLimpiar(boolean desactivar)
     {
-        btnRegistrar.disableProperty().set(!desactivar);
-        btnEditar.disableProperty().set(desactivar);
         btnBorrar.disableProperty().set(desactivar);
-        btnLimpiar.disableProperty().set(desactivar);
+        comboTorneo.getSelectionModel().selectFirst();
+        comboFormato.getSelectionModel().selectFirst();
+        comboArbitro.getSelectionModel().selectFirst();
+        editBlancas.setText("");
+        editNegras.setText("");
     }
 
     public void registrarPartida()
@@ -221,11 +247,55 @@ public class PartidasController implements Initializable {
             int idArbitro = comboArbitro.getSelectionModel().getSelectedItem().getId();
             int mesa = spinnerMesa.getValue();
 
-            String blancas = editNegras.getText();
+            String blancas = editBlancas.getText();
             String negras = editNegras.getText();
             String resultado = "Pendiente";
             Partida partida = new Partida(idFormato, blancas, negras, resultado, resultado, mesa);
-            Datos.agregarPartida(partida, idTorneo, idArbitro);
+            Datos.agregarPartida(partida, idArbitro, jugadorBlancas.getId(), jugadorNegras.getId());
+            Datos.cargarTorneosPartidas();
+            tablaPartidas.setAll(Datos.getListaTorneo().getFirst().getFormatoTorneo().getFirst().getListaPartidas());
+            tableViewPartidas.refresh();
+        }
+    }
+
+    public  void emparejar(int idFormato)
+    {
+        filtroJugador = adminDaoPartidas.jugadoresSinPartida(idFormato); //Retorna una lista de Jugadores sin Partidas
+
+        if(filtroJugador.isEmpty())
+        {
+            ventana.ventanaInformation("Emparejamiento Completado", "Ya estan todos los emparejamientos posibles");
+            return;
+        } else
+        {
+            btnRegistrar.disableProperty().set(false);
+        }
+
+        if (filtroJugador.size() % 2 == 0)
+        {
+            if(!filtroJugador.isEmpty())
+            {
+                int numNegras;
+                int numBlancas = (int)(Math.random() * filtroJugador.size());
+                do
+                {
+                    numNegras = (int)(Math.random() * filtroJugador.size());
+                }while(numBlancas == numNegras);
+
+                editBlancas.setText(filtroJugador.get(numBlancas).getNombre());
+                jugadorBlancas.setNombre(filtroJugador.get(numBlancas).getNombre());
+                jugadorBlancas.setId(filtroJugador.get(numBlancas).getId());
+
+                editNegras.setText(filtroJugador.get(numNegras).getNombre());
+                jugadorNegras.setNombre(filtroJugador.get(numNegras).getNombre());
+                jugadorNegras.setId(filtroJugador.get(numNegras).getId());
+            }
+        }else
+        {
+            VentanasController ventana = new VentanasController();
+            ventana.ventanaWarning("¡Falta un Jugador!", "Para que el Torneo se pueda realizar tiene " +
+                    "que dar de baja a un jugador o dar de alta.\n\n" +
+                    "Actualmente son ¡IMPARES!");
         }
     }
 }

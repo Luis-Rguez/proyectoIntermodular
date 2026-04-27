@@ -14,6 +14,7 @@ public interface DBSchem {
     String TAB_CLASIFICACION = "clasificacion";
     String TAB_TORNEO_STAFF = "Torneo_Staff";
     String TAB_JUEGAN = "juegan";
+    String TAB_JUGADOR_FORMATO = "torneo_inscritos_jugadores";
 
     // COLUMNAS COMUNES (JUGADORES, STAFF, CLUBS, RECINTO, PATROCINADORES)
     String COL_EMAIL = "mail";
@@ -42,6 +43,7 @@ public interface DBSchem {
     String COL_MESA = "mesa";
     String COL_COLOR = "color";
     String COL_RESULTADO = "resultado";
+    String AS_ULTIMO_ID = "ultimoID";
 
     //JUGADORES
     String ID_JUGADOR = "id_jugador";

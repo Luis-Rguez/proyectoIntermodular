@@ -5,14 +5,14 @@ import javafx.collections.ObservableList;
 import org.example.torneoajedrez.controller.VentanasController;
 import org.example.torneoajedrez.database.ConexionBBDD;
 import org.example.torneoajedrez.database.DBSchem;
+import org.example.torneoajedrez.model.Jugador;
 import org.example.torneoajedrez.model.Partida;
-import org.example.torneoajedrez.model.Staff;
-import org.example.torneoajedrez.model.Torneo;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 
 public class AdminDaoPartidas {
@@ -22,6 +22,8 @@ public class AdminDaoPartidas {
     private PreparedStatement preparedStatement;
 
     private ResultSet resultSet;
+
+    private  VentanasController ventana;
 
     public ObservableList<Partida> cargarPartidas(int idFormato, String color)
     {
@@ -72,15 +74,15 @@ public class AdminDaoPartidas {
             }
 
         } catch (SQLException e) {
-            VentanasController ventana = new VentanasController();
+            ventana = new VentanasController();
             ventana.ventanaError("No se ha podido Realizar la Consulta \n\nErro: \n" + e.getMessage());
         }
         return listaPartidas;
     }
 
-    public void agregarPartida(Partida partida, int idTorneo, int idArbitro)
+    public void agregarPartida(Partida partida, int idArbitro) throws SQLException
     {
-      /*  connection = ConexionBBDD.getConnection();
+        connection = ConexionBBDD.getConnection();
 
         String query = String.format("INSERT INTO %s (%s, %s, %s) VALUES\n" +
                                     "(?, ?, ?)",
@@ -94,14 +96,112 @@ public class AdminDaoPartidas {
         preparedStatement.setInt(3, partida.getMesa());
 
         preparedStatement.executeUpdate();
+    }
 
-        agregarJuegan(partida);*/
+    public void borrarEmparejamiento(int idPartida)
+    {
+        connection = ConexionBBDD.getConnection();
+
+        String query = String.format("DELETE FROM %s WHERE %s = ?",
+                DBSchem.TAB_JUEGAN, DBSchem.ID_PARTIDA);
+
+        try
+        {
+            preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setInt(1, idPartida);
+
+            preparedStatement.executeUpdate();
+
+            borrarPartida(idPartida);
+        } catch (SQLException e)
+        {
+            ventana = new VentanasController();
+            ventana.ventanaError("No se ha podido borrar la partida\n\n" + e.getMessage());
+        }
 
     }
 
-    private void agregarJuegan(Partida partida)
+    public void borrarPartida(int idPartida) throws SQLException
     {
-       /* connection = ConexionBBDD.getConnection();
+        connection = ConexionBBDD.getConnection();
+
+        String query = String.format("DELETE FROM %s WHERE %s = ?",
+                DBSchem.TAB_PARTIDAS, DBSchem.ID_PARTIDA);
+
+        preparedStatement = connection.prepareStatement(query);
+
+        preparedStatement.setInt(1, idPartida);
+
+        preparedStatement.executeUpdate();
+
+    }
+
+    public ArrayList<Jugador> jugadoresSinPartida(int idFormato)
+    {
+        ArrayList<Jugador> jugadoresSinPartida = new ArrayList<>();
+
+        connection = ConexionBBDD.getConnection();
+
+        String query = String.format("SELECT j.%s, j.%s FROM %s j\n" +
+                        "INNER JOIN %s fj ON fj.%s = j.%s\n" +
+                        "INNER JOIN %s ft ON ft.%s = fj.%s\n" +
+                        "LEFT JOIN %s jgn ON jgn.%s = j.%s\n" +
+                        "WHERE jgn.%s IS NULL AND ft.%s = ?;",
+                DBSchem.ID_JUGADOR, DBSchem.COL_NOMBRE_JUGADOR, DBSchem.TAB_JUGADORES,
+                DBSchem.TAB_JUGADOR_FORMATO, DBSchem.ID_JUGADOR, DBSchem.ID_JUGADOR,
+                DBSchem.TAB_FORMATO_TORNEO, DBSchem.ID_FORMATO_TORNEO, DBSchem.ID_FORMATO_TORNEO,
+                DBSchem.TAB_JUEGAN, DBSchem.ID_JUGADOR, DBSchem.ID_JUGADOR,
+
+                DBSchem.ID_JUGADOR, DBSchem.ID_FORMATO_TORNEO);
+
+        try
+        {
+            preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setInt(1, idFormato);
+
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next())
+            {
+
+                int idJugador = resultSet.getInt(DBSchem.ID_JUGADOR);
+                String nombre = resultSet.getString(DBSchem.COL_NOMBRE_JUGADOR);
+
+                jugadoresSinPartida.add(new Jugador(idJugador, nombre));
+            }
+        }catch (SQLException e)
+        {
+            ventana = new VentanasController();
+            ventana.ventanaError("No se ha podido Emparejar Aleatoriamente \n\nError: \n" + e.getMessage());
+        }
+        return jugadoresSinPartida;
+    }
+
+    public int ultimoIDPartida () throws SQLException
+    {
+        int ulimoID = 0;
+
+        connection = ConexionBBDD.getConnection();
+
+        String query = String.format("SELECT MAX(%s) as %s FROM %s;",
+                DBSchem.ID_PARTIDA, DBSchem.AS_ULTIMO_ID, DBSchem.TAB_PARTIDAS);
+
+        preparedStatement = connection.prepareStatement(query);
+
+        resultSet = preparedStatement.executeQuery();
+
+        while (resultSet.next())
+        {
+            ulimoID = resultSet.getInt(DBSchem.AS_ULTIMO_ID);
+        }
+        return ulimoID;
+    }
+
+    public void agregarJuegan(int idJugador, int idPartida, String color, String resultado) throws SQLException
+    {
+        connection = ConexionBBDD.getConnection();
 
         String query = String.format("INSERT INTO %s (%s, %s, %s, %s) VALUES\n" +
                         "(?, ?, ?, ?)",
@@ -110,13 +210,12 @@ public class AdminDaoPartidas {
 
         preparedStatement = connection.prepareStatement(query);
 
-         // Mirar Bien como pasar los datos que no tiene partida como id de jugador y color
-        preparedStatement.setInt(1, );
+        preparedStatement.setInt(1, idJugador);
+        preparedStatement.setInt(2,idPartida);
+        preparedStatement.setString(3,color);
+        preparedStatement.setString(4,resultado);
 
-        preparedStatement.setInt(2,partida.get());
-        preparedStatement.setString(3, );
-        preparedStatement.setString(4, partida.getResulBlancas());
 
-        preparedStatement.executeUpdate();*/
+        preparedStatement.executeUpdate();
     }
 }
