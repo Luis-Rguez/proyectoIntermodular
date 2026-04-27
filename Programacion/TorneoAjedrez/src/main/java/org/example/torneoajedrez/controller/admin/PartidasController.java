@@ -196,10 +196,11 @@ public class PartidasController implements Initializable {
             if (index == -1) return;
 
             Partida partida = tableViewPartidas.getSelectionModel().getSelectedItem();
+            System.out.println(partida.getBlancas());
             editBlancas.setText(partida.getBlancas());
             editNegras.setText(partida.getNegras());
 
-            desactivarBotonesLimpiar(false);
+            btnBorrar.disableProperty().set(false);
         });
     }
 
