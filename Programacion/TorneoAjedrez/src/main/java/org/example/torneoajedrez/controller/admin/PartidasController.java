@@ -118,6 +118,7 @@ public class PartidasController implements Initializable {
             {
                 Datos.borrarPartida(partida.getId());
                 tablaPartidas.remove(partida);
+                desactivarBotonesLimpiar(true);
             } else
             {
                 ventana.ventanaWarning("¡PARTIDA JUGADA!", "La Partida ya ha sido Jugada.\n\n¡NO SE PUEDE ELIMINAR!");
@@ -181,14 +182,24 @@ public class PartidasController implements Initializable {
             } else
             {
                 tablaPartidas.setAll(comboFormato.getSelectionModel().getSelectedItem().getListaPartidas());
+                tableViewPartidas.setItems(tablaPartidas);
+                tableViewPartidas.getSelectionModel().clearSelection();
             }
         });
 
         tableViewPartidas.setOnMouseClicked(event ->
         {
+            tableViewPartidas.getSelectionModel().select(tableViewPartidas.getFocusModel().getFocusedIndex());
+
+            int index = tableViewPartidas.getSelectionModel().getSelectedIndex();
+
+            if (index == -1) return;
+
+            Partida partida = tableViewPartidas.getSelectionModel().getSelectedItem();
+            editBlancas.setText(partida.getBlancas());
+            editNegras.setText(partida.getNegras());
+
             desactivarBotonesLimpiar(false);
-            editBlancas.setText(tableViewPartidas.getSelectionModel().getSelectedItem().getBlancas());
-            editNegras.setText(tableViewPartidas.getSelectionModel().getSelectedItem().getNegras());
         });
     }
 
@@ -226,9 +237,6 @@ public class PartidasController implements Initializable {
     private void desactivarBotonesLimpiar(boolean desactivar)
     {
         btnBorrar.disableProperty().set(desactivar);
-        comboTorneo.getSelectionModel().selectFirst();
-        comboFormato.getSelectionModel().selectFirst();
-        comboArbitro.getSelectionModel().selectFirst();
         editBlancas.setText("");
         editNegras.setText("");
     }
@@ -242,7 +250,6 @@ public class PartidasController implements Initializable {
             ventana.ventanaWarning("Faltan Datos", "Por favor, asegurese de que todos los campos estan rellenos");
         }else
         {
-            int idTorneo = comboTorneo.getSelectionModel().getSelectedItem().getIdTorneo();
             int idFormato = comboFormato.getSelectionModel().getSelectedItem().getIdFormatoTorneo();
             int idArbitro = comboArbitro.getSelectionModel().getSelectedItem().getId();
             int mesa = spinnerMesa.getValue();
@@ -253,7 +260,8 @@ public class PartidasController implements Initializable {
             Partida partida = new Partida(idFormato, blancas, negras, resultado, resultado, mesa);
             Datos.agregarPartida(partida, idArbitro, jugadorBlancas.getId(), jugadorNegras.getId());
             Datos.cargarTorneosPartidas();
-            tablaPartidas.setAll(Datos.getListaTorneo().getFirst().getFormatoTorneo().getFirst().getListaPartidas());
+            tablaPartidas.setAll(Datos.getListaTorneo().get(comboTorneo.getSelectionModel().getSelectedIndex()).getFormatoTorneo()
+                                            .get(comboFormato.getSelectionModel().getSelectedIndex()).getListaPartidas());
             tableViewPartidas.refresh();
         }
     }
