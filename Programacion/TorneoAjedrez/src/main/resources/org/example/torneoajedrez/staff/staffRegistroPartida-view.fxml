@@ -16,21 +16,21 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.torneoajedrez.controller.staff.StaffController">
    <top>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="15.0" BorderPane.alignment="CENTER">
          <children>
-            <Text fx:id="textJugadorB" strokeType="OUTSIDE" strokeWidth="0.0" text="Text">
+            <Text fx:id="textJugadorB" strokeType="OUTSIDE" strokeWidth="0.0">
                <font>
                   <Font size="24.0" />
                </font>
             </Text>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="VS">
+            <Text fx:id="textVS" strokeType="OUTSIDE" strokeWidth="0.0" text="VS">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </Text>
-            <Text fx:id="texJugadorN" strokeType="OUTSIDE" strokeWidth="0.0" text="Text">
+            <Text fx:id="textJugadorN" strokeType="OUTSIDE" strokeWidth="0.0">
                <font>
                   <Font size="24.0" />
                </font>
@@ -55,6 +55,7 @@
         </columnConstraints>
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="211.4" minHeight="10.0" prefHeight="203.4" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -68,7 +69,7 @@
                   <Insets top="25.0" />
                </GridPane.margin>
             </Button>
-            <TableView fx:id="tablaViewMovimientos" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2" GridPane.rowSpan="2">
+            <TableView fx:id="tablaViewMovimientos" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="3" GridPane.rowSpan="2">
               <columns>
                 <TableColumn fx:id="colBlancas" prefWidth="75.0" text="Movimiento Blancas" />
                 <TableColumn fx:id="colNegras" prefWidth="75.0" text="Movimiento Negras" />
@@ -105,15 +106,7 @@
                   <TextField fx:id="editMovNegras" alignment="BOTTOM_CENTER" />
                </children>
             </VBox>
-            <Button fx:id="btnFinPartida" mnemonicParsing="false" text="Fin Partida" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
-               <GridPane.margin>
-                  <Insets bottom="10.0" />
-               </GridPane.margin>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </Button>
-            <ComboBox fx:id="comboPartidas" prefWidth="150.0" promptText="Partidas" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+            <ComboBox fx:id="comboPartidas" prefHeight="26.0" prefWidth="350.0" promptText="Partidas" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
                <GridPane.margin>
                   <Insets bottom="10.0" />
                </GridPane.margin>
@@ -121,6 +114,23 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ComboBox>
+            <HBox alignment="BOTTOM_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.columnIndex="3" GridPane.rowIndex="2">
+               <children>
+                  <ComboBox fx:id="comboGanan" prefHeight="26.0" prefWidth="77.0" promptText="Ganan">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </ComboBox>
+                  <Button fx:id="btnFinPartida" mnemonicParsing="false" text="Fin Partida">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+               </children>
+               <padding>
+                  <Insets bottom="10.0" />
+               </padding>
+            </HBox>
          </children>
       </GridPane>
    </center>

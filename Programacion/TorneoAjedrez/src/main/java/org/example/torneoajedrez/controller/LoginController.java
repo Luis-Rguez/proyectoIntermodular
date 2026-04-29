@@ -9,6 +9,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.example.torneoajedrez.AppTorneoAjedrez;
+import org.example.torneoajedrez.DataSet.DatosStaff;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -57,6 +58,7 @@ public class LoginController implements Initializable {
             }else
             {
                 ventanasAciones.abrirVentanas(btnCerrar, ventanaArbitro, "Panel Principal", true);
+                DatosStaff.setIdStaff(1);
             }
         });
 

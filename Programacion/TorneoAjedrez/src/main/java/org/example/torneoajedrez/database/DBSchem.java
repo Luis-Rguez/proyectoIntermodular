@@ -52,4 +52,8 @@ public interface DBSchem {
 
     //CLUBS
     String ID_CLUB = "id_club";
+
+    //MOVIMIENTOS
+    String COL_BLANCAS = "blancas";
+    String COL_NEGRAS = "negras";
 }

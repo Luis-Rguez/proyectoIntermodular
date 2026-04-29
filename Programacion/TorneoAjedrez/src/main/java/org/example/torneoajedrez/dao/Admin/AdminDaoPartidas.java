@@ -170,7 +170,7 @@ public class AdminDaoPartidas {
 
     }
 
-    public ArrayList<Jugador> jugadoresSinPartida(int idFormato)
+    public ArrayList<Jugador> jugadoresSinPartida(int idFormato, int ronda)
     {
         ArrayList<Jugador> jugadoresSinPartida = new ArrayList<>();
 
@@ -180,12 +180,11 @@ public class AdminDaoPartidas {
                         "INNER JOIN %s fj ON fj.%s = j.%s\n" +
                         "INNER JOIN %s ft ON ft.%s = fj.%s\n" +
                         "LEFT JOIN %s jgn ON jgn.%s = j.%s\n" +
-                        "WHERE jgn.%s IS NULL AND ft.%s = ?;",
+                        "WHERE jgn.%s IS NULL AND ft.%s = ?",
                 DBSchem.ID_JUGADOR, DBSchem.COL_NOMBRE_JUGADOR, DBSchem.TAB_JUGADORES,
                 DBSchem.TAB_JUGADOR_FORMATO, DBSchem.ID_JUGADOR, DBSchem.ID_JUGADOR,
                 DBSchem.TAB_FORMATO_TORNEO, DBSchem.ID_FORMATO_TORNEO, DBSchem.ID_FORMATO_TORNEO,
                 DBSchem.TAB_JUEGAN, DBSchem.ID_JUGADOR, DBSchem.ID_JUGADOR,
-
                 DBSchem.ID_JUGADOR, DBSchem.ID_FORMATO_TORNEO);
 
         try
@@ -212,7 +211,7 @@ public class AdminDaoPartidas {
         return jugadoresSinPartida;
     }
 
-    public int ultimoIDPartida () throws SQLException
+    public int ultimoIDPartida() throws SQLException
     {
         int ulimoID = 0;
 
@@ -250,5 +249,48 @@ public class AdminDaoPartidas {
 
 
         preparedStatement.executeUpdate();
+    }
+
+    public ArrayList<Jugador> cargarGanadores(int idFormato, int ronda)
+    {
+        ArrayList<Jugador> jugadoresGanan = new ArrayList<>();
+
+        connection = ConexionBBDD.getConnection();
+
+        String query = String.format("SELECT j.%s, j.%s FROM %s j\n" +
+                        "INNER JOIN %s fj ON fj.%s = j.%s\n" +
+                        "INNER JOIN %s ft ON ft.%s = fj.%s\n" +
+                        "INNER JOIN %s jgn ON jgn.%s = j.%s\n" +
+                        "WHERE jgn.%s = ? AND ft.%s = ? AND p.%s = ?;",
+                DBSchem.ID_JUGADOR, DBSchem.COL_NOMBRE_JUGADOR, DBSchem.TAB_JUGADORES,
+                DBSchem.TAB_JUGADOR_FORMATO, DBSchem.ID_JUGADOR, DBSchem.ID_JUGADOR,
+                DBSchem.TAB_FORMATO_TORNEO, DBSchem.ID_FORMATO_TORNEO, DBSchem.ID_FORMATO_TORNEO,
+                DBSchem.TAB_JUEGAN, DBSchem.ID_JUGADOR, DBSchem.ID_JUGADOR,
+                DBSchem.COL_RESULTADO, DBSchem.ID_FORMATO_TORNEO, DBSchem.COL_RONDA);
+
+        try
+        {
+            preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setString(1,"Ganan");
+            preparedStatement.setInt(2, idFormato);
+            preparedStatement.setInt(3, ronda);
+
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next())
+            {
+
+                int idJugador = resultSet.getInt(DBSchem.ID_JUGADOR);
+                String nombre = resultSet.getString(DBSchem.COL_NOMBRE_JUGADOR);
+
+                jugadoresGanan.add(new Jugador(idJugador, nombre));
+            }
+        }catch (SQLException e)
+        {
+            ventana = new VentanasController();
+            ventana.ventanaError("No se ha podido Emparejar Aleatoriamente \n\nError: \n" + e.getMessage());
+        }
+        return jugadoresGanan;
     }
 }

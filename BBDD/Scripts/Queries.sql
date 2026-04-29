@@ -100,3 +100,12 @@ INNER JOIN torneo_inscritos_jugadores fj ON fj.id_jugador = j.id_jugador
 INNER JOIN formato_torneo ft ON ft.id_tipo_torneo = fj.id_tipo_torneo
 LEFT JOIN juegan jgn ON jgn.id_jugador = j.id_jugador
 WHERE jgn.id_jugador IS NULL AND ft.id_tipo_torneo = 1;
+
+-- Muestra los Emparejamientos (Partidas) que registrara el Arbitro con id=1
+SELECT p.id_partida, jb.nombre_jugador AS Blancas, jn.nombre_jugador AS negras FROM partidas p
+INNER JOIN juegan jgb ON p.id_partida = jgb.id_partida
+INNER JOIN jugadores jb ON jb.id_jugador = jgb.id_jugador AND jgb.color = 'Blancas'
+INNER JOIN juegan jgn ON p.id_partida = jgn.id_partida
+INNER JOIN jugadores jn ON jn.id_jugador = jgn.id_jugador AND jgn.color = 'Negras'
+INNER JOIN staff st ON st.id_staff = p.id_staff
+WHERE st.id_staff = 1 AND jgn.resultado = 'Pendiente';

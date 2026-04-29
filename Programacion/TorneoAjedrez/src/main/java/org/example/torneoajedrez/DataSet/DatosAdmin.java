@@ -13,6 +13,7 @@ import org.example.torneoajedrez.dao.Usuario.UserDao;
 import org.example.torneoajedrez.model.*;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 @Getter
 @Setter
@@ -124,7 +125,7 @@ public static void agregarPartida(Partida partida, int idArbitro, int idBlancas,
         adminDaoPartidas.agregarJuegan(idBlancas, idPartida, "Blancas", partida.getResulBlancas());
 
         // ingresamos registro para el jugador de negras
-        adminDaoPartidas.agregarJuegan(idNegras, idPartida, "Negras", partida.getResulBlancas());
+        adminDaoPartidas.agregarJuegan(idNegras, idPartida, "Negras", partida.getResulNegras());
 
     } catch(SQLException e) {
         VentanasController ventana = new VentanasController();
@@ -141,11 +142,6 @@ public static void agregarPartida(Partida partida, int idArbitro, int idBlancas,
     {
         adminDaoPartidas.borrarEmparejamiento(partida);
         cargarTorneosPartidas();
-    }
-
-    public static void crearRonda(ObservableList<Partida> listaJugadores, int ultimaRonda)
-    {
-        // TODO Crear Partida
     }
 
     // ---------------------- TORNEOS -----------------------------------------------------------------------------------

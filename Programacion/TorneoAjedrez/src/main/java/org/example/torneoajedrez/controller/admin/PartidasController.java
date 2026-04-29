@@ -13,6 +13,7 @@ import org.example.torneoajedrez.dao.Admin.AdminDaoPartidas;
 import org.example.torneoajedrez.model.*;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
@@ -74,6 +75,7 @@ public class PartidasController implements Initializable {
     private String pathLogin;
     private VentanasController ventana;
     private ArrayList<Jugador> filtroJugador;
+    private ArrayList<Jugador> filtroGanadores;
 
     private AdminDaoPartidas adminDaoPartidas;
     private Jugador jugadorBlancas;
@@ -132,7 +134,14 @@ public class PartidasController implements Initializable {
         {
             if(comboTorneo.getSelectionModel().getSelectedIndex() !=-1)
             {
-                emparejar(comboFormato.getSelectionModel().getSelectedItem().getIdFormatoTorneo());
+                if(filtroJugador.isEmpty())
+                {
+                    // Me devuelva una lista donde los jugadores no tienen partida
+                    filtroJugador = adminDaoPartidas.jugadoresSinPartida(comboFormato.getSelectionModel().getSelectedItem().getIdFormatoTorneo(), (comboRonda.getSelectionModel().getSelectedIndex() -1));  //Retorna una lista de Jugadores sin Partidas
+                }else
+                {
+                    emparejar();
+                }
             } else
             {
                 ventana.ventanaWarning("¡Cuidado!", "Seleccione un Torneo y un Formato de Torneo primero");
@@ -163,14 +172,18 @@ public class PartidasController implements Initializable {
                 if(partida.getResulBlancas().equals("Pendiente") || partida.getResulNegras().equals("Pendiente"))
                 {
                     ventana.ventanaWarning("Faltan Partidas","Aun no se han terminado de jugar todas las Partidas de esta Ronda");
-                    rondaTerminada = false;
                     return;
-                } else
-                {
-                    // Creamos una nueva Ronda
                 }
             }
-            DatosAdmin.crearRonda(tablaPartidas, comboRonda.getSelectionModel().getSelectedItem());
+
+            listaRonda.add(listaRonda.getLast() + 1);
+            comboRonda.getSelectionModel().selectLast();
+            filtroJugador.clear();
+
+            // filtramos ganadores de la ronda 1
+
+            filtroGanadores = adminDaoPartidas.cargarGanadores(comboFormato.getSelectionModel().getSelectedItem().getIdFormatoTorneo(), listaRonda.getLast()-1);
+            desactivarBotonesLimpiar(true);
         });
 
         //---------------------ACIONES TABLA Y COMBO--------------------------------------------------------
@@ -278,9 +291,9 @@ public class PartidasController implements Initializable {
         ventana = new VentanasController();
         jugadorBlancas = new Jugador();
         jugadorNegras = new Jugador();
-        rondaTerminada = false;
         adminDaoPartidas = new AdminDaoPartidas();
         filtroJugador = new ArrayList<>();
+        filtroGanadores = new ArrayList<>();
         tablaPartidas = FXCollections.observableArrayList();
         mesa = new SpinnerValueFactory.IntegerSpinnerValueFactory(1,50,1,1);
 
@@ -323,10 +336,8 @@ public class PartidasController implements Initializable {
         }
     }
 
-    public  void emparejar(int idFormato)
+    public  void emparejar()
     {
-        filtroJugador = adminDaoPartidas.jugadoresSinPartida(idFormato); //Retorna una lista de Jugadores sin Partidas
-
         if(filtroJugador.isEmpty())
         {
             ventana.ventanaInformation("Emparejamiento Completado", "Ya estan todos los emparejamientos posibles.\n\n Puede Empezar la siguiente Ronda.");
