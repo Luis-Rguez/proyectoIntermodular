@@ -1,4 +1,4 @@
-package org.example.torneoajedrez.dao;
+package org.example.torneoajedrez.dao.Admin;
 
 import org.example.torneoajedrez.controller.VentanasController;
 import org.example.torneoajedrez.database.ConexionBBDD;

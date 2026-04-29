@@ -1,4 +1,4 @@
-package org.example.torneoajedrez.dao;
+package org.example.torneoajedrez.dao.Admin;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -6,7 +6,6 @@ import org.example.torneoajedrez.controller.VentanasController;
 import org.example.torneoajedrez.database.ConexionBBDD;
 import org.example.torneoajedrez.database.DBSchem;
 import org.example.torneoajedrez.model.Staff;
-import org.example.torneoajedrez.model.Usuario;
 
 import java.sql.*;
 

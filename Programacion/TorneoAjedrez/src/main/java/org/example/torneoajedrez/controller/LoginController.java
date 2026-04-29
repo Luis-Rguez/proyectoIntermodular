@@ -5,6 +5,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.example.torneoajedrez.AppTorneoAjedrez;
 
@@ -14,10 +16,13 @@ import java.util.ResourceBundle;
 public class LoginController implements Initializable {
 
     @FXML
-    private Button btnLogin;
+    private Button btnLogin,  btnCerrar;
 
     @FXML
-    private Button btnCerrar;
+    private TextField editDNI;
+
+    @FXML
+    private PasswordField editPass;    @FXML
 
     private VentanasController ventanasAciones;
     private String ventanaAdmin;
@@ -43,7 +48,16 @@ public class LoginController implements Initializable {
     {
         btnLogin.setOnAction(event ->
         {
-            ventanasAciones.abrirVentanas(btnCerrar, ventanaAdmin, "Panel Principal", true);
+            if(editDNI.getText().equals(""))
+            {
+                ventanasAciones.abrirVentanas(btnCerrar, ventanaAdmin, "Panel Principal", true);
+            }else if(editDNI.getText().equals("2"))
+            {
+                ventanasAciones.abrirVentanas(btnCerrar, ventanaUsuario, "Panel Principal", true);
+            }else
+            {
+                ventanasAciones.abrirVentanas(btnCerrar, ventanaArbitro, "Panel Principal", true);
+            }
         });
 
         btnCerrar.setOnAction(event -> ventanasAciones.cerrarVentana(btnCerrar));

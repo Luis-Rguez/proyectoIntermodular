@@ -16,20 +16,22 @@ import lombok.Setter;
 public class Partida {
 
     private String blancas, negras, arbitro, resulBlancas, resulNegras ;
-    private int id, id_formato, mesa;
+    private int id, id_formato, mesa, ronda, idBlancas, idNegras;
     private ObservableList<Movimientos> listaMovimiento;
 
-    public Partida(int id, int id_formato, String blancas, String resulBlancas, int mesa, String arbitro) {
+    public Partida(int id, int id_formato, String blancas, String resulBlancas, int mesa, String arbitro, int idJugador, int ronda) {
         this.id = id;
         this.id_formato = id_formato;
         this.blancas = blancas;
         this.resulBlancas = resulBlancas;
         this.mesa = mesa;
         this.arbitro = arbitro;
+        this.idBlancas = idJugador;
+        this.ronda = ronda;
         listaMovimiento = FXCollections.observableArrayList();
     }
 
-    public Partida(int id_formato, String blancas, String negras, String resulBlancas, String resulNegras, int mesa) {
+    public Partida(int id_formato, String blancas, String negras, String resulBlancas, String resulNegras, int mesa, int ronda) {
         this.id = id;
         this.id_formato = id_formato;
         this.blancas = blancas;
@@ -38,11 +40,13 @@ public class Partida {
         this.resulNegras = resulNegras;
         this.mesa = mesa;
         this.arbitro = arbitro;
+        this.ronda = ronda;
         listaMovimiento = FXCollections.observableArrayList();
     }
 
-    public Partida(String negras, String resulNegras) {
+    public Partida(String negras, String resulNegras, int idJugador) {
         this.negras = negras;
         this.resulNegras = resulNegras;
+        this.idNegras = idJugador;
     }
 }

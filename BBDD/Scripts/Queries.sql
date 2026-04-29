@@ -18,7 +18,7 @@ INNER JOIN jugadores j ON ins.id_jugador = j.id_jugador
 INNER JOIN club c ON c.id_club = j.id_club;
 
 -- Mostramos el Fomato de Torneo y su Clasificacion del Todos los Torneos
-SELECT tr.nombre_torneo, t.categoria, c.clasificatoria, j.nombre_jugador, c.puntuacion, cl.nombre_club FROM torneo tr
+SELECT tr.nombre, t.categoria, c.clasificatoria, j.nombre_jugador, c.puntuacion, cl.nombre_club FROM torneo tr
 INNER JOIN formato_torneo t ON t.id_torneo = tr.id_torneo
 INNER JOIN torneo_inscritos_jugadores ins ON ins.id_tipo_torneo = t.id_tipo_torneo 
 INNER JOIN jugadores j ON ins.id_jugador = j.id_jugador
@@ -26,7 +26,7 @@ INNER JOIN clasificacion c ON c.id_jugador = j.id_jugador AND c.id_tipo_torneo =
 LEFT JOIN club cl ON cl.id_club = j.id_club;
 
 -- Mostramos el Fomato de Torneo y su Clasificacion del Torneo 1
-SELECT tr.nombre_torneo, t.categoria, c.clasificatoria, j.nombre_jugador, c.puntuacion, cl.nombre_club FROM torneo tr
+SELECT tr.nombre, t.categoria, c.clasificatoria, j.nombre_jugador, c.puntuacion, cl.nombre_club FROM torneo tr
 INNER JOIN formato_torneo t ON t.id_torneo = tr.id_torneo
 INNER JOIN torneo_inscritos_jugadores ins ON ins.id_tipo_torneo = t.id_tipo_torneo 
 INNER JOIN jugadores j ON ins.id_jugador = j.id_jugador
@@ -63,19 +63,19 @@ INNER JOIN partidas p ON p.id_Partida = j.id_Partida
 WHERE j.resultado LIKE 'Pend%';
 
 -- Mostramos al equipo del Staff que no estan asigandos a ninguna mesa del Toreno 1
-SELECT nombre_staff, apellido_staff, rol FROM staff
+SELECT nombre, apellido, rol FROM staff
 WHERE id_staff IN (SELECT id_staff FROM Torneo_Staff WHERE id_torneo = 1)
 AND
 id_staff NOT IN (SELECT id_staff FROM partidas);
 
 -- Mostramos al equipo del Staff que si estan asigandos a ninguna mesa del Toreno 1
-SELECT nombre_staff, apellido_staff, rol FROM staff
+SELECT nombre, apellido, rol FROM staff
 WHERE id_staff IN (SELECT id_staff FROM Torneo_Staff WHERE id_torneo = 1)
 AND
 id_staff IN (SELECT id_staff FROM partidas);
 
 -- Mostramos al equipo del Staff que es Produccion del Torneo 2
-SELECT nombre_staff, apellido_staff, rol FROM staff
+SELECT nombre, apellido, rol FROM staff
 WHERE id_staff IN (SELECT id_staff FROM Torneo_Staff WHERE id_torneo = 2);
 
 -- Mostramos a los Jugadores que se Presentan de forma Individual
@@ -85,3 +85,18 @@ WHERE id_club IS NULL;
 -- Mostramos a los Jugadores que se Presentan de forma Individual
 SELECT COUNT(nombre_Jugador) FROM jugadores
 WHERE id_club IS NULL;
+
+-- Del Formato del Torneo 1 me muestra solo los jugadores con el color Blanco de la 1º Ronda
+SELECT p.id_partida, p.id_Tipo_Torneo, jr.nombre_jugador, j.color, st.nombre as Arbitro, j.Resultado , p.mesa FROM jugadores jr
+INNER JOIN juegan j ON j.id_jugador = jr.id_jugador
+INNER JOIN partidas p ON p.id_Partida = j.id_Partida
+INNER JOIN staff st ON st.id_staff = p.id_staff
+INNER JOIN formato_torneo ft ON p.id_Tipo_Torneo = ft.id_Tipo_Torneo
+WHERE p.id_Tipo_Torneo = 1 AND j.Color = 'Blancas' AND p.ronda = 1;
+        
+-- Muestra que Jugadores Estan sin Emparejar (Sin Partida) 
+SELECT j.id_jugador, j.nombre_jugador FROM jugadores j
+INNER JOIN torneo_inscritos_jugadores fj ON fj.id_jugador = j.id_jugador
+INNER JOIN formato_torneo ft ON ft.id_tipo_torneo = fj.id_tipo_torneo
+LEFT JOIN juegan jgn ON jgn.id_jugador = j.id_jugador
+WHERE jgn.id_jugador IS NULL AND ft.id_tipo_torneo = 1;

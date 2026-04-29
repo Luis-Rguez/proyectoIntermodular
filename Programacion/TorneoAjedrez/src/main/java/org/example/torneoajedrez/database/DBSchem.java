@@ -44,8 +44,12 @@ public interface DBSchem {
     String COL_COLOR = "color";
     String COL_RESULTADO = "resultado";
     String AS_ULTIMO_ID = "ultimoID";
+    String COL_RONDA = "ronda";
 
     //JUGADORES
     String ID_JUGADOR = "id_jugador";
     String COL_NOMBRE_JUGADOR = "nombre_jugador";
+
+    //CLUBS
+    String ID_CLUB = "id_club";
 }

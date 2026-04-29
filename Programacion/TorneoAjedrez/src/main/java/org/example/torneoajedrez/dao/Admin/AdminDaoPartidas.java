@@ -1,4 +1,4 @@
-package org.example.torneoajedrez.dao;
+package org.example.torneoajedrez.dao.Admin;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -31,14 +31,14 @@ public class AdminDaoPartidas {
 
         connection = ConexionBBDD.getConnection();
 
-        String query = String.format("SELECT p.%s, p.%s, jr.%s, st.%s, st.%s, j.%s, p.%s FROM %s jr\n" +
+        String query = String.format("SELECT p.%s, p.%s, jr.%s, st.%s, st.%s, j.%s, p.%s, jr.%s, p.%s FROM %s jr\n" +
                         "INNER JOIN %s j ON j.%s = jr.%s\n" +
                         "INNER JOIN %s p ON p.%s = j.%s\n" +
                         "INNER JOIN %s st ON st.%s = p.%s\n" +
                         "INNER JOIN %s ft ON p.%s = ft.%s\n" +
                         "WHERE p.%s = ? AND j.%s = ?",
-                DBSchem.ID_PARTIDA, DBSchem.ID_FORMATO_TORNEO, DBSchem.COL_NOMBRE_JUGADOR,
-                DBSchem.COL_NOMBRE, DBSchem.COL_APELLIDO, DBSchem.COL_RESULTADO, DBSchem.COL_MESA,
+                DBSchem.ID_PARTIDA, DBSchem.ID_FORMATO_TORNEO, DBSchem.COL_NOMBRE_JUGADOR, DBSchem.COL_NOMBRE,
+                DBSchem.COL_APELLIDO, DBSchem.COL_RESULTADO, DBSchem.COL_MESA, DBSchem.ID_JUGADOR, DBSchem.COL_RONDA,
                 DBSchem.TAB_JUGADORES,
                 DBSchem.TAB_JUEGAN, DBSchem.ID_JUGADOR, DBSchem.ID_JUGADOR,
                 DBSchem.TAB_PARTIDAS, DBSchem.ID_PARTIDA, DBSchem.ID_PARTIDA,
@@ -63,13 +63,15 @@ public class AdminDaoPartidas {
                 String nombreArbitro = resultSet.getString(DBSchem.COL_NOMBRE) + " " + resultSet.getString(DBSchem.COL_APELLIDO);
                 String resultado = resultSet.getString(DBSchem.COL_RESULTADO);
                 int mesa = resultSet.getInt(DBSchem.COL_MESA);
+                int idJugador = resultSet.getInt(DBSchem.ID_JUGADOR);
+                int ronda = resultSet.getInt(DBSchem.COL_RONDA);
 
                 if(color.equals("blancas"))
                 {
-                    listaPartidas.add(new Partida(idPartida, idFormtToeneo, nombreJugador, resultado, mesa, nombreArbitro));
+                    listaPartidas.add(new Partida(idPartida, idFormtToeneo, nombreJugador, resultado, mesa, nombreArbitro, idJugador, ronda));
                 }else
                 {
-                    listaPartidas.add(new Partida(nombreJugador, resultado));
+                    listaPartidas.add(new Partida(nombreJugador, resultado, idJugador));
                 }
             }
 
@@ -84,18 +86,49 @@ public class AdminDaoPartidas {
     {
         connection = ConexionBBDD.getConnection();
 
-        String query = String.format("INSERT INTO %s (%s, %s, %s) VALUES\n" +
-                                    "(?, ?, ?)",
+        String query = String.format("INSERT INTO %s (%s, %s, %s, %s) VALUES\n" +
+                                    "(?, ?, ?, ?)",
                 DBSchem.TAB_PARTIDAS,
-                DBSchem.ID_STAFF, DBSchem.ID_FORMATO_TORNEO, DBSchem.COL_MESA);
+                DBSchem.ID_STAFF, DBSchem.ID_FORMATO_TORNEO, DBSchem.COL_MESA, DBSchem.COL_RONDA);
 
         preparedStatement = connection.prepareStatement(query);
 
         preparedStatement.setInt(1, idArbitro);
         preparedStatement.setInt(2,partida.getId_formato());
         preparedStatement.setInt(3, partida.getMesa());
+        preparedStatement.setInt(4, partida.getRonda());
 
         preparedStatement.executeUpdate();
+    }
+
+    public int totalRondas(int idFormato)
+    {
+        connection = ConexionBBDD.getConnection();
+
+        String query = String.format("SELECT MAX(%s) AS %s FROM %s p " +
+                        "INNER JOIN %s ft ON ft.%s = p.%s " +
+                        "WHERE ft.%s = ?",
+                DBSchem.COL_RONDA, DBSchem.COL_RONDA, DBSchem.TAB_PARTIDAS,
+                DBSchem.TAB_FORMATO_TORNEO, DBSchem.ID_FORMATO_TORNEO, DBSchem.ID_FORMATO_TORNEO,
+                DBSchem.ID_FORMATO_TORNEO);
+
+        try {
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, idFormato);
+
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next())
+            {
+
+                return resultSet.getInt(DBSchem.COL_RONDA);
+            }
+
+        } catch (SQLException e) {
+            ventana = new VentanasController();
+            ventana.ventanaError("No se ha podido Realizar la Consulta \n\nErro: \n" + e.getMessage());
+        }
+        return 0;
     }
 
     public void borrarEmparejamiento(int idPartida)

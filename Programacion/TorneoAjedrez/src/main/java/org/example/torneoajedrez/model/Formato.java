@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
 
 
 @Getter
@@ -18,6 +19,7 @@ public class Formato {
     private String categoria;
     private int idFormatoTorneo, idTorneo;
     private ObservableList<Partida> listaPartidas;
+    private List <Clasificacion> clasificacion;
 
     public Formato(String categoria) {
         this.categoria = categoria;

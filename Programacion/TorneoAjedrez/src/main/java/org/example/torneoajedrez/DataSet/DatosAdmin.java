@@ -5,10 +5,11 @@ import javafx.collections.ObservableList;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.torneoajedrez.controller.VentanasController;
-import org.example.torneoajedrez.dao.AdminDaoFormatos;
-import org.example.torneoajedrez.dao.AdminDaoPartidas;
-import org.example.torneoajedrez.dao.AdminDaoStaff;
-import org.example.torneoajedrez.dao.AdminDaoTorneos;
+import org.example.torneoajedrez.dao.Admin.AdminDaoFormatos;
+import org.example.torneoajedrez.dao.Admin.AdminDaoPartidas;
+import org.example.torneoajedrez.dao.Admin.AdminDaoStaff;
+import org.example.torneoajedrez.dao.Admin.AdminDaoTorneos;
+import org.example.torneoajedrez.dao.Usuario.UserDao;
 import org.example.torneoajedrez.model.*;
 
 import java.sql.SQLException;
@@ -16,7 +17,7 @@ import java.sql.SQLException;
 @Getter
 @Setter
 
-public class Datos {
+public class DatosAdmin {
 
 
     private static ObservableList<Torneo> listaTorneo = FXCollections.observableArrayList();
@@ -87,13 +88,14 @@ public class Datos {
 public static ObservableList<Torneo> cargarTorneosPartidas()
 {
     listaTorneo = adminDaoTorneos.cargarTorneoIdNom();
+
     for(int i=0; i<listaTorneo.size(); i++)
     {
         listaTorneo.get(i).setFormatoTorneo(adminDaoFormatos.cargarFormatoTorneo(listaTorneo.get(i).getIdTorneo()));
 
         for(int j=0; j<listaTorneo.get(i).getFormatoTorneo().size(); j++)
         {
-            // Cargarmos primero la partida de blancas y luego negras y añadimos al jugador negro y su resultado
+            // Cargamos primero la partida de blancas y luego negras y añadimos al jugador negro y su resultado
             listaTorneo.get(i).getFormatoTorneo().get(j).setListaPartidas
                     (adminDaoPartidas.cargarPartidas(listaTorneo.get(i).getFormatoTorneo().get(j).getIdFormatoTorneo(), "blancas"));
 
@@ -135,10 +137,15 @@ public static void agregarPartida(Partida partida, int idArbitro, int idBlancas,
     return adminDaoStaff.filtroTorneoArbitro(idTorneo, rol);
 }
 
-    public static void borrarPartida(int partida)
+    public static void borrarPartida(int partida, int ronda)
     {
         adminDaoPartidas.borrarEmparejamiento(partida);
         cargarTorneosPartidas();
+    }
+
+    public static void crearRonda(ObservableList<Partida> listaJugadores, int ultimaRonda)
+    {
+        // TODO Crear Partida
     }
 
     // ---------------------- TORNEOS -----------------------------------------------------------------------------------

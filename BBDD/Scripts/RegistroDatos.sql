@@ -69,7 +69,9 @@ INSERT INTO jugadores (id_Club, Nombre_jugador, DNI, MAIL, Telefono) VALUES
 (6, 'Zelda Ds', '99955661F','zelda@example.es','632000010'),
 (7, 'Moises Gonzalez', '11133333P','moy@example.es','666999666'),
 (null, 'Bobby Fische', '87412365L','bobby@example.es','600000001'),
-(null, 'Raúl Capablanca', '85214774S','capablanca@example.es','695620315');
+(null, 'Raúl Capablanca', '85214774S','capablanca@example.es','695620315'),
+(null, 'Rey Koopa', '66666666P','koopa@example.es','852147963'),
+(null, 'Toad champi', '753426687P','toad@example.es','688421111');
 
 INSERT INTO Torneo_Inscritos_Jugadores (id_Tipo_Torneo, id_Jugador) VALUES
 (1,1),
@@ -81,12 +83,14 @@ INSERT INTO Torneo_Inscritos_Jugadores (id_Tipo_Torneo, id_Jugador) VALUES
 (4,7),
 (4,8),
 (3,9),
-(3,10);
+(3,10),
+(1,13),
+(1,14);
 
-INSERT INTO partidas (id_Staff, id_Tipo_Torneo, Mesa) VALUES
-(1,1,8),
-(2,1,6),
-(1,2,5);
+INSERT INTO partidas (id_Staff, id_Tipo_Torneo, Ronda, Mesa) VALUES
+(1,1,1,8),
+(2,1,1,6),
+(1,2,1,5);
 
 alter table juegan change column Color Color ENUM('Blancas', 'Negras') not null; 
 alter table juegan change column Resultado Resultado ENUM('Ganan', 'Pierden', 'Tablas', 'Pendiente') not null;

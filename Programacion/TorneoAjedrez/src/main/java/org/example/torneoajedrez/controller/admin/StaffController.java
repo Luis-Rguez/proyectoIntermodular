@@ -8,9 +8,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import org.example.torneoajedrez.DataSet.Datos;
+import org.example.torneoajedrez.DataSet.DatosAdmin;
 import org.example.torneoajedrez.controller.VentanasController;
-import org.example.torneoajedrez.dao.AdminDaoStaff;
+import org.example.torneoajedrez.dao.Admin.AdminDaoStaff;
 import org.example.torneoajedrez.model.Staff;
 import org.example.torneoajedrez.model.Torneo;
 
@@ -123,7 +123,7 @@ public class StaffController implements Initializable {
             {
                 if(ventana.ventanaConfirmacion("Borrar Usuario", String.format("¿Esta Seguro de querer Borrar al usuario %s %s?", staff.getNombre(), staff.getApellido())))
                 {
-                    Datos.borrarUsuario(staff);
+                    DatosAdmin.borrarUsuario(staff);
                     vaciarCampos();
                 }
             }
@@ -134,7 +134,7 @@ public class StaffController implements Initializable {
         btnBusqueda.setOnAction(event ->
         {
             editBuscar.clear();
-            Datos.getListaStaff().clear();
+            DatosAdmin.getListaStaff().clear();
 
             comboTorneo.getSelectionModel().selectFirst();
         });
@@ -154,12 +154,12 @@ public class StaffController implements Initializable {
 
                 if(id !=0)
                 {
-                    listaStaff.setAll(Datos.filtrarUsuarioPorTorneo(id));
+                    listaStaff.setAll(DatosAdmin.filtrarUsuarioPorTorneo(id));
                 }
 
             } else
             {
-                listaStaff.setAll(Datos.getListaStaff());
+                listaStaff.setAll(DatosAdmin.getListaStaff());
             }
         });
 
@@ -197,13 +197,13 @@ public class StaffController implements Initializable {
         adminDaoStaff = new AdminDaoStaff();
         grupoRol = new ToggleGroup();
 
-        Datos.vaciarLista();
+        DatosAdmin.vaciarLista();
 
-        listaStaff = Datos.getListaStaff();
+        listaStaff = DatosAdmin.getListaStaff();
         listaFiltrada = new FilteredList<>(listaStaff, staff -> true);
 
-        listaTorneos = Datos.getListaTorneo();
-        comboFiltro = Datos.getListaTorneo();
+        listaTorneos = DatosAdmin.getListaTorneo();
+        comboFiltro = DatosAdmin.getListaTorneo();
     }
 
     public void vaciarCampos()
@@ -252,7 +252,7 @@ public class StaffController implements Initializable {
             {
                 try
                 {
-                    Datos.agregarUsuario(adminDaoStaff.agregarUsuario(staff));
+                    DatosAdmin.agregarUsuario(adminDaoStaff.agregarUsuario(staff));
                     staff.setId(adminDaoStaff.idNuevoUsuario(Integer.parseInt(staff.getDni())));
                     if(idTorneo > 0)
                     {
@@ -266,7 +266,7 @@ public class StaffController implements Initializable {
             {
                 try
                 {
-                    Datos.editarUsuario(staff);
+                    DatosAdmin.editarUsuario(staff);
                     if(idTorneo >0)
                     {
                         adminDaoStaff.insertTorneoStaff(idTorneo, staff.getId());
@@ -304,6 +304,6 @@ public class StaffController implements Initializable {
         }
 
         int idTorneo = adminDaoStaff.selectTorneoStaff(staff.getId());
-        registroTorneo.getSelectionModel().select(Datos.busquedaTorneo(idTorneo).getIdTorneo());
+        registroTorneo.getSelectionModel().select(DatosAdmin.busquedaTorneo(idTorneo).getIdTorneo());
     }
 }

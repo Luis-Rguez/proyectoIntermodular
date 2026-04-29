@@ -15,6 +15,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -81,7 +82,12 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button fx:id="btnLimpiar" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefWidth="100.0" text="Limpiar" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="3">
+            <Button fx:id="btnRonda" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefWidth="100.0" text="Nueva Ronda" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="3">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button fx:id="btnLimpiar" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefWidth="100.0" text="Limpiar" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="4">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -133,6 +139,22 @@
                   <Insets bottom="10.0" />
                </GridPane.margin>
             </Separator>
+            <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.rowIndex="5">
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <GridPane.margin>
+                  <Insets left="30.0" />
+               </GridPane.margin>
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ronda" />
+                  <ComboBox fx:id="comboRonda" maxWidth="1.7976931348623157E308" prefWidth="150.0" promptText="Ronda">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </ComboBox>
+               </children>
+            </HBox>
          </children>
       </GridPane>
    </center>

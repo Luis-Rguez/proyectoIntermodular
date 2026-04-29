@@ -40,7 +40,6 @@ public class AdminController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle)
     {
        instancias();
-       initGUI();
        acciones();
     }
 
@@ -74,10 +73,6 @@ public class AdminController implements Initializable {
         btnVer.setOnAction(event -> ventana.abrirVentanas(btnSalir,"verPartidas-view.fxml", "Partidas", false));
 
         btnSalir.setOnAction(event -> ventana.cerrarVentana(btnSalir));
-    }
-
-    private void initGUI()
-    {
     }
 
     private void instancias()

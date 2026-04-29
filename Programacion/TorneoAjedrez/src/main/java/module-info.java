@@ -6,6 +6,7 @@ module org.example.torneoajedrez {
     requires javafx.graphics;
     requires java.sql;
     requires java.desktop;
+    requires org.example.torneoajedrez;
 
     opens org.example.torneoajedrez to javafx.fxml;
     exports org.example.torneoajedrez;
