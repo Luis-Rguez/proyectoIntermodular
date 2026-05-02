@@ -65,9 +65,12 @@ public class LoginController implements Initializable {
             {
                 abrirVentana(ventanaJugador);
             } else if(editMail.getText().equals("1"))
-            {
-                DatosJugador.setIdJugador(dato);
-                abrirVentana(ventanaAdmin);
+            {//if((dato = usuarioDao.getLogin(editMail.getText(), editPass.getText(), "Staff","id_Staff")) !=0)
+               // if(dato == 1)
+               // {
+                    DatosJugador.setIdJugador(dato);
+                    abrirVentana(ventanaAdmin);
+               // }
             } else
             {
                 ventanasAciones.ventanaWarning("Usuario Incorrecto", "Por favor, Verifique su Contraseña y su Password.");

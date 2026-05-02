@@ -18,9 +18,6 @@ public class AdminController implements Initializable {
     @FXML
     private Button btnStaff, btnTroenos, btnJugadores;
 
-    @FXML
-    private MenuBar menuBarra;
-
     // Item Menu
     @FXML
     private MenuItem menuItemTorneo, menuItemCerrarSesion, menuItemSalir;
@@ -31,7 +28,7 @@ public class AdminController implements Initializable {
 
     // Item Partidas
     @FXML
-    private MenuItem menuItemOrganizar, menuItemVer;
+    private MenuItem menuItemOrganizar, menuItemVer, menuItemClasificacion;
 
     private String pathLogin;
     private VentanasController ventana;
@@ -53,6 +50,7 @@ public class AdminController implements Initializable {
         menuItemPatrocinador.setOnAction(event -> ventana.abrirVentanas(btnSalir,"admin/adminPatrocinador-view.fxml", "Registro de Patrocinadores", true));
         menuItemOrganizar.setOnAction(event -> ventana.abrirVentanas(btnSalir,"admin/adminPartidas-view.fxml", "Organizar Partidas", true));
         menuItemVer.setOnAction(event -> ventana.abrirVentanas(btnSalir,"verPartidas-view.fxml", "Partidas", true));
+        menuItemClasificacion.setOnAction(event -> ventana.abrirVentanas(btnSalir,"admin/adminClasificacion-view.fxml", "Clasificacion", true));
 
         menuItemCerrarSesion.setOnAction(event ->
         {
@@ -71,6 +69,7 @@ public class AdminController implements Initializable {
         btnTroenos.setOnAction(event -> ventana.abrirVentanas(btnSalir,"admin/adminTorneo-view.fxml", "Registro de Torneos", true));
         btnPartidas.setOnAction(event -> ventana.abrirVentanas(btnSalir,"admin/adminPartidas-view.fxml", "Resgistro de Partidas", true));
         btnVer.setOnAction(event -> ventana.abrirVentanas(btnSalir,"verPartidas-view.fxml", "Partidas", true));
+        btnClasificacion.setOnAction(event -> ventana.abrirVentanas(btnSalir,"admin/adminClasificacion-view.fxml", "Clasificacion", true));
 
         btnSalir.setOnAction(event -> ventana.cerrarVentana(btnSalir));
     }

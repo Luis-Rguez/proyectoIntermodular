@@ -33,13 +33,14 @@ INSERT INTO formato_torneo (id_Torneo, Categoria, Reglas) VALUES
 (2, 'Metodo Suizo ', 'Abierto Clubs'),
 (3, 'Toreneo Cerrado GM', 'Solo Categoria Gran Maestro');
 
-INSERT INTO staff (Nombre_Staff, Apellido_Staff, DNI_Staff, Telefono_Staff, Rol, Salario, Nº_Cuenta) VALUES
-('Miguel', 'Rosales', '74165456M', '987426351', 'Arbitro', 200, 12346789123465),
-('Maria', 'Lopez', '15963215P', '651302135', 'Arbitro', 200, 12346789123465),
-('Santiago', 'Segura', '23165498K', '72134568', 'Producion', 200, 12346789123465),
-('Juana', 'Vera', '89461325C', '666666666', 'Arbitro', 200, 12346789123465),
-('Manolo', 'Rodriguez', '12365482N', '622222222', 'Arbitro', 200, 12346789123465),
-('Moises', 'Xin', '15948672Z', '675312846', 'Producion', 200, 12346789123465);
+INSERT INTO staff (Nombre_Staff, Apellido_Staff, DNI_Staff, Telefono_Staff, Mail, Rol, Salario, Nº_Cuenta, pass) VALUES
+('admin', 'admin', 'XXXXXXXXX', 'XXXXXXXXX', 'admin@example.com', 'admin', 000, 000000000, 'admin'),
+('Miguel', 'Rosales', '74165456M', '987426351', 'miguel@example.com', 'Arbitro', 200, 12346789123465, '111'),
+('Maria', 'Lopez', '15963215P', '651302135', 'maria@example.com', 'Arbitro', 200, 12346789123465, '222'),
+('Santiago', 'Segura', '23165498K', '72134568', 'santiago@example.com', 'Producion', 200, 12346789123465, '333'),
+('Juana', 'Vera', '89461325C', '666666666', 'juana@example.com', 'Arbitro', 200, 12346789123465, '444'),
+('Manolo', 'Rodriguez', '12365482N', '622222222', 'manolo@example.com', 'Arbitro', 200, 12346789123465, '555'),
+('Moises', 'Xin', '15948672Z', '675312846', 'moises@example.com', 'Producion', 200, 12346789123465, '666');
 
 INSERT INTO  Torneo_Staff (id_Torneo, id_Staff) VALUES
 (1,1),

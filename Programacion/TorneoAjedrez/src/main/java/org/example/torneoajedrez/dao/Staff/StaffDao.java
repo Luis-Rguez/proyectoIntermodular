@@ -25,7 +25,6 @@ public class StaffDao {
     public List<Partida> cargarPartidasStaff(int idStaff)
     {
         ObservableList<Partida> listaPartidas = FXCollections.observableArrayList();
-
         connection = ConexionBBDD.getConnection();
 
         String query = String.format("SELECT p.%s, p.%s, p.%s, p.%s, jb.%s as %s, jb.%s as %s, jn.%s as %s, jn.%s as %s FROM %s p\n" +

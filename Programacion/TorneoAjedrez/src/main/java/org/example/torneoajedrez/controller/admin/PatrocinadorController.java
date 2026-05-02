@@ -24,7 +24,7 @@ public class PatrocinadorController implements Initializable {
 
     // Item Partidas
     @FXML
-    private MenuItem menuItemOrganizar, menuItemVer;
+    private MenuItem menuItemOrganizar, menuItemVer, menuItemClasificacion;
 
     private String pathLogin;
     private VentanasController ventana;
@@ -47,6 +47,7 @@ public class PatrocinadorController implements Initializable {
         menuItemPatrocinador.setOnAction(event -> ventana.abrirVentanas(btnSalir,"admin/adminPatrocinador-view.fxml", "Registro de Patrocinadores", true));
         menuItemOrganizar.setOnAction(event -> ventana.abrirVentanas(btnSalir,"admin/adminPartidas-view.fxml", "Organizar Partidas", true));
         menuItemVer.setOnAction(event -> ventana.abrirVentanas(btnSalir,"verPartidas-view.fxml", "Partidas", true));
+        menuItemClasificacion.setOnAction(event -> ventana.abrirVentanas(btnSalir,"admin/adminClasificacion-view.fxml", "Clasificacion", true));
 
         menuItemCerrarSesion.setOnAction(event ->
         {

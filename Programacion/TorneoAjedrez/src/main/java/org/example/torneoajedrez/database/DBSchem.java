@@ -56,4 +56,8 @@ public interface DBSchem {
     //MOVIMIENTOS
     String COL_BLANCAS = "blancas";
     String COL_NEGRAS = "negras";
+
+    //CLASIFICACION
+    String ID_CLASIFICAION = "id_clasificacion";
+    String COL_PUESTO = "clasificatoria";
 }

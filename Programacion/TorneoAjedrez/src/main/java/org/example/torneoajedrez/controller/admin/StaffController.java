@@ -30,7 +30,7 @@ public class StaffController implements Initializable {
 
     // Item Partidas
     @FXML
-    private MenuItem menuItemOrganizar, menuItemVer;
+    private MenuItem menuItemOrganizar, menuItemVer, menuItemClasificacion;
 
     @FXML
     private Button btnBusqueda, btnEditar, btnRegistrar, btnBorrar, btnCancelar, btnSalir;
@@ -87,6 +87,7 @@ public class StaffController implements Initializable {
         menuItemPatrocinador.setOnAction(event -> ventana.abrirVentanas(btnSalir,"admin/adminPatrocinador-view.fxml", "Registro de Patrocinadores", true));
         menuItemOrganizar.setOnAction(event -> ventana.abrirVentanas(btnSalir,"admin/adminPartidas-view.fxml", "Organizar Partidas", true));
         menuItemVer.setOnAction(event -> ventana.abrirVentanas(btnSalir,"verPartidas-view.fxml", "Partidas", true));
+        menuItemClasificacion.setOnAction(event -> ventana.abrirVentanas(btnSalir,"admin/adminClasificacion-view.fxml", "Clasificacion", true));
         menuItemCerrarSesion.setOnAction(event ->
         {
             if(ventana.ventanaConfirmacion("¿Cerrar Sesion?", "¿Esta seguro de querer cesarr la sesion?"))
@@ -166,7 +167,7 @@ public class StaffController implements Initializable {
         editBuscar.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
-                listaFiltrada.setPredicate(producto -> producto.getNombre().contains(t1));// producto.getTitle().equalsIgnoreCase(t1)) qeu sean iguales
+                listaFiltrada.setPredicate(staff -> staff.getNombre().contains(t1));// staff.getTitle().equalsIgnoreCase(t1)) qeu sean iguales
             }
         });
     }

@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import org.example.torneoajedrez.controller.VentanasController;
 import org.example.torneoajedrez.database.ConexionBBDD;
 import org.example.torneoajedrez.database.DBSchem;
+import org.example.torneoajedrez.model.Formato;
 import org.example.torneoajedrez.model.Jugador;
 import org.example.torneoajedrez.model.Partida;
 
@@ -25,7 +26,7 @@ public class AdminDaoPartidas {
 
     private  VentanasController ventana;
 
-    public ObservableList<Partida> cargarPartidas(int idFormato, String color, int partida)
+    public ObservableList<Partida> cargarPartidas(int idFormato, String color)
     {
         ObservableList<Partida> listaPartidas = FXCollections.observableArrayList();
 
@@ -36,7 +37,7 @@ public class AdminDaoPartidas {
                         "INNER JOIN %s p ON p.%s = j.%s\n" +
                         "INNER JOIN %s st ON st.%s = p.%s\n" +
                         "INNER JOIN %s ft ON p.%s = ft.%s\n" +
-                        "WHERE p.%s = ? AND j.%s = ? AND p.%s = ?;",
+                        "WHERE p.%s = ? AND j.%s = ?;",
                 DBSchem.ID_PARTIDA, DBSchem.ID_FORMATO_TORNEO, DBSchem.COL_NOMBRE_JUGADOR, DBSchem.COL_NOMBRE,
                 DBSchem.COL_APELLIDO, DBSchem.COL_RESULTADO, DBSchem.COL_MESA, DBSchem.ID_JUGADOR, DBSchem.COL_RONDA,
                 DBSchem.TAB_JUGADORES,
@@ -44,14 +45,14 @@ public class AdminDaoPartidas {
                 DBSchem.TAB_PARTIDAS, DBSchem.ID_PARTIDA, DBSchem.ID_PARTIDA,
                 DBSchem.TAB_STAFF, DBSchem.ID_STAFF, DBSchem.ID_STAFF,
                 DBSchem.TAB_FORMATO_TORNEO, DBSchem.ID_FORMATO_TORNEO, DBSchem.ID_FORMATO_TORNEO,
-                DBSchem.ID_FORMATO_TORNEO,DBSchem.COL_COLOR, DBSchem.COL_RONDA);
+                DBSchem.ID_FORMATO_TORNEO,DBSchem.COL_COLOR);
 
         try {
             preparedStatement = connection.prepareStatement(query);
 
             preparedStatement.setInt(1, idFormato);
             preparedStatement.setString(2,color);
-            preparedStatement.setInt(3, partida);
+
 
             resultSet = preparedStatement.executeQuery();
 
@@ -171,7 +172,7 @@ public class AdminDaoPartidas {
 
     }
 
-    public ArrayList<Jugador> jugadoresSinPartida(int idFormato, int ronda)
+    public ArrayList<Jugador> jugadoresSinPartida(int idFormato)
     {
         ArrayList<Jugador> jugadoresSinPartida = new ArrayList<>();
 
@@ -256,6 +257,8 @@ public class AdminDaoPartidas {
     {
         ArrayList<Jugador> jugadoresGanan = new ArrayList<>();
 
+        int rondaActual = ronda+1;
+
         connection = ConexionBBDD.getConnection();
 
         String query = String.format("SELECT j.%s, j.%s FROM %s j\n" +
@@ -263,13 +266,18 @@ public class AdminDaoPartidas {
                         "INNER JOIN %s ft ON ft.%s = fj.%s\n" +
                         "INNER JOIN %s jgn ON jgn.%s = j.%s\n" +
                         "INNER JOIN %s p ON p.%s = jgn.%s\n" +
-                        "WHERE jgn.%s = ? AND ft.%s = ? AND p.%s = ?;",
+                        "WHERE jgn.%s = ? AND ft.%s = ? AND p.%s = ?\n" +
+                        "AND NOT EXISTS (SELECT 1 FROM %s p2\n" +
+                        "INNER JOIN %s j2 ON j2.%s = p2.%s\n" +
+                        "WHERE p2.%s = ? AND j2.%s = j.%s);",
                 DBSchem.ID_JUGADOR, DBSchem.COL_NOMBRE_JUGADOR, DBSchem.TAB_JUGADORES,
                 DBSchem.TAB_JUGADOR_FORMATO, DBSchem.ID_JUGADOR, DBSchem.ID_JUGADOR,
                 DBSchem.TAB_FORMATO_TORNEO, DBSchem.ID_FORMATO_TORNEO, DBSchem.ID_FORMATO_TORNEO,
                 DBSchem.TAB_JUEGAN, DBSchem.ID_JUGADOR, DBSchem.ID_JUGADOR,
                 DBSchem.TAB_PARTIDAS, DBSchem.ID_PARTIDA, DBSchem.ID_PARTIDA,
-                DBSchem.COL_RESULTADO, DBSchem.ID_FORMATO_TORNEO, DBSchem.COL_RONDA);
+                DBSchem.COL_RESULTADO, DBSchem.ID_FORMATO_TORNEO, DBSchem.COL_RONDA,
+                DBSchem.TAB_PARTIDAS, DBSchem.TAB_JUEGAN, DBSchem.ID_PARTIDA, DBSchem.ID_PARTIDA,
+                DBSchem.COL_RONDA,DBSchem.ID_JUGADOR,DBSchem.ID_JUGADOR);
 
         try
         {
@@ -278,6 +286,7 @@ public class AdminDaoPartidas {
             preparedStatement.setString(1,"Ganan");
             preparedStatement.setInt(2, idFormato);
             preparedStatement.setInt(3, ronda);
+            preparedStatement.setInt(4, rondaActual);
 
             resultSet = preparedStatement.executeQuery();
 

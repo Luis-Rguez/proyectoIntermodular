@@ -110,7 +110,7 @@ public class DatosAdmin {
 
     // ---------------------- PARTIDAS -----------------------------------------------------------------------------------
 
-    public static ObservableList<Torneo> cargarTorneosPartidas(int partida)
+    public static ObservableList<Torneo> cargarTorneosPartidas()
 {
     listaTorneo = adminDaoTorneos.cargarTorneoIdNom();
 
@@ -122,12 +122,12 @@ public class DatosAdmin {
         {
             // Cargamos primero la partida de blancas y luego negras y añadimos al jugador negro y su resultado
             listaTorneo.get(i).getFormatoTorneo().get(j).setListaPartidas
-                    (adminDaoPartidas.cargarPartidas(listaTorneo.get(i).getFormatoTorneo().get(j).getIdFormatoTorneo(), "blancas", partida));
+                    (adminDaoPartidas.cargarPartidas(listaTorneo.get(i).getFormatoTorneo().get(j).getIdFormatoTorneo(), "blancas"));
 
             for(int z=0; z < listaTorneo.get(i).getFormatoTorneo().get(j).getListaPartidas().size(); z++)
             {
                ObservableList<Partida> negras = FXCollections.observableArrayList();
-                negras.setAll(adminDaoPartidas.cargarPartidas(listaTorneo.get(i).getFormatoTorneo().get(j).getIdFormatoTorneo(), "negras", partida));
+                negras.setAll(adminDaoPartidas.cargarPartidas(listaTorneo.get(i).getFormatoTorneo().get(j).getIdFormatoTorneo(), "negras"));
                 listaTorneo.get(i).getFormatoTorneo().get(j).getListaPartidas().get(z).setNegras(negras.get(z).getNegras());
                 listaTorneo.get(i).getFormatoTorneo().get(j).getListaPartidas().get(z).setResulNegras(negras.get(z).getResulNegras());
             }
@@ -165,7 +165,7 @@ public class DatosAdmin {
     public static void borrarPartida(int partida)
     {
         adminDaoPartidas.borrarEmparejamiento(partida);
-        cargarTorneosPartidas(partida);
+        cargarTorneosPartidas();
     }
 
 
@@ -176,11 +176,6 @@ public class DatosAdmin {
         listaTorneo.clear();
         listaJugadores.clear();
         listaJugadores.clear();
-    }
-
-    public static void setIngresarPartida()
-    {
-
     }
 
     public static ObservableList<Torneo> getListaTorneo() {

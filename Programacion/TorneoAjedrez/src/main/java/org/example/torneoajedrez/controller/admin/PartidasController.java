@@ -9,6 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.example.torneoajedrez.DataSet.DatosAdmin;
 import org.example.torneoajedrez.controller.VentanasController;
+import org.example.torneoajedrez.dao.Admin.AdminDaoFormatos;
 import org.example.torneoajedrez.dao.Admin.AdminDaoPartidas;
 import org.example.torneoajedrez.model.*;
 
@@ -30,7 +31,7 @@ public class PartidasController implements Initializable {
 
     // Item Partidas
     @FXML
-    private MenuItem menuItemOrganizar, menuItemVer;
+    private MenuItem menuItemOrganizar, menuItemVer, menuItemClasificacion;
 
     // Botones
     @FXML
@@ -77,6 +78,7 @@ public class PartidasController implements Initializable {
     private ArrayList<Jugador> filtroJugador;
 
     private AdminDaoPartidas adminDaoPartidas;
+    private AdminDaoFormatos adminDaoFormatos;
     private Jugador jugadorBlancas;
     private Jugador jugadorNegras;
 
@@ -98,6 +100,7 @@ public class PartidasController implements Initializable {
         menuItemPatrocinador.setOnAction(event -> ventana.abrirVentanas(btnSalir,"admin/adminPatrocinador-view.fxml", "Registro de Patrocinadores", true));
         menuItemOrganizar.setOnAction(event -> ventana.abrirVentanas(btnSalir,"admin/adminPartidas-view.fxml", "Organizar Partidas", true));
         menuItemVer.setOnAction(event -> ventana.abrirVentanas(btnSalir,"verPartidas-view.fxml", "Partidas", true));
+        menuItemClasificacion.setOnAction(event -> ventana.abrirVentanas(btnSalir,"admin/adminClasificacion-view.fxml", "Clasificacion", true));
 
         menuItemCerrarSesion.setOnAction(event ->
         {
@@ -181,7 +184,8 @@ public class PartidasController implements Initializable {
                 int idTorneo = comboTorneo.getSelectionModel().getSelectedItem().getIdTorneo();
                 int indicelista = comboTorneo.getSelectionModel().getSelectedIndex();
                 listaStaff.setAll(DatosAdmin.staffTorneoActivo(idTorneo, "arbitro"));
-
+                listaRonda.add(1);
+                comboRonda.getSelectionModel().selectFirst();
 
                 if(listaStaff.isEmpty())
                 {
@@ -197,6 +201,9 @@ public class PartidasController implements Initializable {
                     if(!listaFormato.isEmpty())
                     {
                         comboFormato.getSelectionModel().selectFirst();
+                    }else
+                    {
+                       // listaFormato.setAll(adminDaoFormatos.cargarFormatoTorneo(comboTorneo.getSelectionModel().getSelectedItem().getIdTorneo()));
                     }
                 }
                 if(listaStaff.isEmpty() || listaTorneos.get(indicelista).getFormatoTorneo().isEmpty())
@@ -224,16 +231,11 @@ public class PartidasController implements Initializable {
                     listaRonda.add(i+1);
                 }
                 comboRonda.getSelectionModel().selectLast();
-                // TODO llamar funcion para que agregue las partidas de la ronda del combo selecionado
-                //listaFormato.get(comboFormato.getSelectionModel().getSelectedIndex()).setListaPartidas().add(meter aqui el retorno de la query);
-
             }
         });
 
         comboRonda.setOnAction(event ->
         {
-            // TODO llamar funcion para que agregue las partidas de la ronda del combo selecionado
-            //listaFormato.get(comboFormato.getSelectionModel().getSelectedIndex()).setListaPartidas().add(meter aqui el retorno de la query);
             cargarTabla();
         });
 
@@ -251,48 +253,6 @@ public class PartidasController implements Initializable {
 
             btnBorrar.disableProperty().set(false);
         });
-    }
-
-    private void cargarTabla()
-    {
-        tablaPartidas.clear();
-
-        if(!comboRonda.getSelectionModel().isEmpty())
-        {
-            if(DatosAdmin.cargarTorneosPartidas(comboRonda.getSelectionModel().getSelectedItem()).isEmpty())
-            {
-                int posTorneo = comboTorneo.getSelectionModel().getSelectedIndex();
-                int posFomato = comboFormato.getSelectionModel().getSelectedIndex();
-                int posRonda = comboRonda.getSelectionModel().getSelectedIndex();
-
-                listaTorneos.setAll(DatosAdmin.cargarTorneosPartidas(comboRonda.getSelectionModel().getSelectedItem()));
-                listaFormato.setAll(listaTorneos.get(posTorneo).getFormatoTorneo());
-                comboTorneo.getSelectionModel().select(posTorneo);
-                comboFormato.getSelectionModel().select(posFomato);
-                comboRonda.getSelectionModel().select(posRonda);
-
-                System.out.println("Hola");
-            }
-        }
-
-        if(!comboFormato.getSelectionModel().isEmpty())
-        {
-            if (!comboRonda.getSelectionModel().isEmpty())
-            {
-                comboFormato.getSelectionModel().getSelectedItem().getListaPartidas().forEach(item ->
-                {
-                    if (Integer.valueOf(item.getRonda()).equals(comboRonda.getSelectionModel().getSelectedItem()))
-                    {
-                        tablaPartidas.add(item);
-                        System.out.println("hola");
-                    }
-                });
-
-                tableViewPartidas.setItems(tablaPartidas);
-                tableViewPartidas.refresh();
-                tableViewPartidas.getSelectionModel().clearSelection();
-            }
-        }
     }
 
     private void initGUI()
@@ -316,6 +276,7 @@ public class PartidasController implements Initializable {
         jugadorBlancas = new Jugador();
         jugadorNegras = new Jugador();
         adminDaoPartidas = new AdminDaoPartidas();
+        adminDaoFormatos = new AdminDaoFormatos();
         filtroJugador = new ArrayList<>();
         tablaPartidas = FXCollections.observableArrayList();
         mesa = new SpinnerValueFactory.IntegerSpinnerValueFactory(1,50,1,1);
@@ -324,8 +285,31 @@ public class PartidasController implements Initializable {
 
         listaStaff = FXCollections.observableArrayList();
         listaRonda = FXCollections.observableArrayList();
-        listaTorneos = DatosAdmin.cargarTorneosPartidas(1);
+        listaTorneos = DatosAdmin.cargarTorneosPartidas();
         listaFormato = FXCollections.observableArrayList();
+    }
+
+    private void cargarTabla()
+    {
+        tablaPartidas.clear();
+
+        if(!comboFormato.getSelectionModel().isEmpty())
+        {
+            if (!comboRonda.getSelectionModel().isEmpty())
+            {
+                comboFormato.getSelectionModel().getSelectedItem().getListaPartidas().forEach(item ->
+                {
+                    if (Integer.valueOf(item.getRonda()).equals(comboRonda.getSelectionModel().getSelectedItem()))
+                    {
+                        tablaPartidas.add(item);
+                    }
+                });
+
+                tableViewPartidas.setItems(tablaPartidas);
+                tableViewPartidas.refresh();
+                tableViewPartidas.getSelectionModel().clearSelection();
+            }
+        }
     }
 
     private void desactivarBotonesLimpiar(boolean desactivar)
@@ -376,7 +360,10 @@ public class PartidasController implements Initializable {
             btnRegistrar.disableProperty().set(false);
         }
 
-        if (comprobarMultiplo())
+        if(filtroJugador.size() == 1)
+        {
+            ventana.ventanaInformation("No hay Partidas","Ya se genero la final.\n\n No se pueden generar mas partidas.");
+        }else if (comprobarMultiplo())
         {
             if(!filtroJugador.isEmpty())
             {
@@ -459,18 +446,15 @@ public class PartidasController implements Initializable {
     {
         if(comboTorneo.getSelectionModel().getSelectedIndex() !=-1)
         {
-            if(comboRonda.getSelectionModel().getSelectedItem() == 1)
+            if(comboRonda.getSelectionModel().getSelectedItem() <= 1)
             {
-                // Me devuelva una lista donde los jugadores no tienen partida (sirva para la 1º Ronda)
                 filtroJugador = adminDaoPartidas.jugadoresSinPartida(comboFormato.getSelectionModel().getSelectedItem()
-                        .getIdFormatoTorneo(), comboRonda.getSelectionModel().getSelectedItem());
+                        .getIdFormatoTorneo());
+
             }else if(comboRonda.getSelectionModel().getSelectedItem() > 1)
             {
-                // // Me devuelva una lista donde los jugadores no han Ganado la Ronda Anterior
                 filtroJugador = adminDaoPartidas.cargarGanadores(comboFormato.getSelectionModel().getSelectedItem()
                         .getIdFormatoTorneo(), listaRonda.getLast()-1);
-                System.out.println(listaRonda.getLast()-1);
-                System.out.println(filtroJugador.size());
             }
         } else
         {

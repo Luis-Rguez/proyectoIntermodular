@@ -19,9 +19,16 @@ public class Torneo {
     private int idTorneo;
     private ObservableList<Formato> formatoTorneo;
 
-    public Torneo(String torneo1, int idTorneo) {
-        nombre=torneo1;
+    public Torneo(String torneo, int idTorneo) {
+        nombre=torneo;
         this.idTorneo = idTorneo;
+        formatoTorneo = FXCollections.observableArrayList();
+    }
+
+    public Torneo(int idTorneo, String nombre)
+    {
+        this.idTorneo = idTorneo;
+        this.nombre = nombre;
         formatoTorneo = FXCollections.observableArrayList();
     }
 

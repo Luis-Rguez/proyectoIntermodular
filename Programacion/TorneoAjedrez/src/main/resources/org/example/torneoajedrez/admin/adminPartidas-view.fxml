@@ -190,6 +190,7 @@
             <items>
               <MenuItem fx:id="menuItemOrganizar" mnemonicParsing="false" text="Organizar Partidas" />
                   <MenuItem fx:id="menuItemVer" mnemonicParsing="false" text="Ver Partidas" />
+                  <MenuItem fx:id="menuItemClasificacion" mnemonicParsing="false" text="Clasificacion" />
             </items>
           </Menu>
         </menus>

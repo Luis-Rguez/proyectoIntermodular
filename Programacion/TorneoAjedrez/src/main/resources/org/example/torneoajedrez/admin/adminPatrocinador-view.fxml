@@ -16,8 +16,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1"
-fx:controller="org.example.torneoajedrez.controller.admin.PatrocinadorController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.torneoajedrez.controller.admin.PatrocinadorController">
    <center>
       <GridPane BorderPane.alignment="CENTER">
         <columnConstraints>
@@ -130,6 +129,7 @@ fx:controller="org.example.torneoajedrez.controller.admin.PatrocinadorController
             <items>
               <MenuItem fx:id="menuItemOrganizar" mnemonicParsing="false" text="Organizar Partidas" />
                   <MenuItem fx:id="menuItemVer" mnemonicParsing="false" text="Ver Partidas" />
+                  <MenuItem fx:id="menuItemClasificacion" mnemonicParsing="false" text="Clasificacion" />
             </items>
           </Menu>
         </menus>

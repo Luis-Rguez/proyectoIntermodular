@@ -114,12 +114,16 @@ public class StaffController implements Initializable {
                 {
                     staffDao.actualizarResultado(idPartida,idBlancas, "Ganan");
                     staffDao.actualizarResultado(idPartida,idNegras, "Pierden");
+                    instancias();
+                    initGUI();
                 }
 
                 case "Negras" ->
                 {
                     staffDao.actualizarResultado(idPartida,idNegras, "Ganan");
                     staffDao.actualizarResultado(idPartida,idBlancas, "Pierden");
+                    instancias();
+                    initGUI();
                 }
             }
         });
@@ -158,7 +162,7 @@ public class StaffController implements Initializable {
                 textJugadorB.setText(comboPartidas.getSelectionModel().getSelectedItem().getBlancas());
                 textJugadorN.setText(comboPartidas.getSelectionModel().getSelectedItem().getNegras());
 
-                comboPartidas.getSelectionModel().selectFirst();
+                //comboPartidas.getSelectionModel().selectFirst();
                 tablaMovimientos.setAll(staffDao.cargarMovimientos(comboPartidas.getSelectionModel().getSelectedItem().getId()));
                 tablaViewMovimientos.refresh();
             }
