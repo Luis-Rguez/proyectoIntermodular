@@ -75,7 +75,6 @@ public class PartidasController implements Initializable {
     private String pathLogin;
     private VentanasController ventana;
     private ArrayList<Jugador> filtroJugador;
-    private ArrayList<Jugador> filtroGanadores;
 
     private AdminDaoPartidas adminDaoPartidas;
     private Jugador jugadorBlancas;
@@ -118,10 +117,11 @@ public class PartidasController implements Initializable {
             Partida partida = tableViewPartidas.getSelectionModel().getSelectedItem();
             if(partida.getResulBlancas().equals("Pendiente"))
             {
-                DatosAdmin.borrarPartida(partida.getId(), comboRonda.getSelectionModel().getSelectedItem());
+                DatosAdmin.borrarPartida(partida.getId());
                 tablaPartidas.remove(partida);
                 tableViewPartidas.refresh();
                 desactivarBotonesLimpiar(true);
+                cargarEmparejar();
             } else
             {
                 ventana.ventanaWarning("¡PARTIDA JUGADA!", "La Partida ya ha sido Jugada.\n\n¡NO SE PUEDE ELIMINAR!");
@@ -132,25 +132,14 @@ public class PartidasController implements Initializable {
 
         btnEmparejar.setOnAction(event ->
         {
-            if(comboTorneo.getSelectionModel().getSelectedIndex() !=-1)
-            {
-                if(filtroJugador.isEmpty())
-                {
-                    // Me devuelva una lista donde los jugadores no tienen partida
-                    filtroJugador = adminDaoPartidas.jugadoresSinPartida(comboFormato.getSelectionModel().getSelectedItem().getIdFormatoTorneo(), (comboRonda.getSelectionModel().getSelectedIndex() -1));  //Retorna una lista de Jugadores sin Partidas
-                }else
-                {
-                    emparejar();
-                }
-            } else
-            {
-                ventana.ventanaWarning("¡Cuidado!", "Seleccione un Torneo y un Formato de Torneo primero");
-            }
+            cargarEmparejar();
+            emparejar();
         });
 
         btnRegistrar.setOnAction(event ->
                 {
                     registrarPartida();
+                    cargarTabla();
                     btnRegistrar.disableProperty().set(true);
                     editBlancas.setText("");
                     editNegras.setText("");
@@ -180,36 +169,41 @@ public class PartidasController implements Initializable {
             comboRonda.getSelectionModel().selectLast();
             filtroJugador.clear();
 
-            // filtramos ganadores de la ronda 1
-
-            filtroGanadores = adminDaoPartidas.cargarGanadores(comboFormato.getSelectionModel().getSelectedItem().getIdFormatoTorneo(), listaRonda.getLast()-1);
             desactivarBotonesLimpiar(true);
+            cargarTabla();
         });
 
         //---------------------ACIONES TABLA Y COMBO--------------------------------------------------------
         comboTorneo.setOnAction(event ->
         {
-            int idTorneo = comboTorneo.getSelectionModel().getSelectedItem().getIdTorneo();
-            int indicelista = comboTorneo.getSelectionModel().getSelectedIndex();
+            if(!comboTorneo.getSelectionModel().isEmpty())
+            {
+                int idTorneo = comboTorneo.getSelectionModel().getSelectedItem().getIdTorneo();
+                int indicelista = comboTorneo.getSelectionModel().getSelectedIndex();
+                listaStaff.setAll(DatosAdmin.staffTorneoActivo(idTorneo, "arbitro"));
 
-            listaStaff.setAll(DatosAdmin.staffTorneoActivo(idTorneo, "arbitro"));
 
-            if(listaStaff.isEmpty())
-            {
-                ventana.ventanaWarning("¡Cuidado!",String.format("Para el Torneo %s tiene que contratar a Arbitros", listaTorneos.get(indicelista).getNombre()));
-            }
+                if(listaStaff.isEmpty())
+                {
+                    ventana.ventanaWarning("¡Cuidado!",String.format("Para el Torneo %s tiene que contratar a Arbitros", listaTorneos.get(indicelista).getNombre()));
+                }
 
-            if(listaTorneos.get(indicelista).getFormatoTorneo().isEmpty())
-            {
-                ventana.ventanaWarning("¡Cuidado!",String.format("Para el Torneo %s tiene que crear un Formato de Competicion", listaTorneos.get(indicelista).getNombre()));
-            }else
-            {
-                listaFormato.setAll(listaTorneos.get(indicelista).getFormatoTorneo());
-                comboFormato.getSelectionModel().selectFirst();
-            }
-            if(listaStaff.isEmpty() || listaTorneos.get(indicelista).getFormatoTorneo().isEmpty())
-            {
-                btnRegistrar.disableProperty().set(true);
+                if(listaTorneos.get(indicelista).getFormatoTorneo().isEmpty())
+                {
+                    ventana.ventanaWarning("¡Cuidado!",String.format("Para el Torneo %s tiene que crear un Formato de Competicion", listaTorneos.get(indicelista).getNombre()));
+                }else
+                {
+                    listaFormato.setAll(listaTorneos.get(indicelista).getFormatoTorneo());
+                    if(!listaFormato.isEmpty())
+                    {
+                        comboFormato.getSelectionModel().selectFirst();
+                    }
+                }
+                if(listaStaff.isEmpty() || listaTorneos.get(indicelista).getFormatoTorneo().isEmpty())
+                {
+                    btnRegistrar.disableProperty().set(true);
+                }
+                cargarTabla();
             }
         });
 
@@ -229,12 +223,19 @@ public class PartidasController implements Initializable {
                 {
                     listaRonda.add(i+1);
                 }
-                comboRonda.getSelectionModel().selectFirst();
-                listaRonda.getFirst();
+                comboRonda.getSelectionModel().selectLast();
+                // TODO llamar funcion para que agregue las partidas de la ronda del combo selecionado
+                //listaFormato.get(comboFormato.getSelectionModel().getSelectedIndex()).setListaPartidas().add(meter aqui el retorno de la query);
+
             }
         });
 
-        comboRonda.setOnAction(event -> cargarTabla());
+        comboRonda.setOnAction(event ->
+        {
+            // TODO llamar funcion para que agregue las partidas de la ronda del combo selecionado
+            //listaFormato.get(comboFormato.getSelectionModel().getSelectedIndex()).setListaPartidas().add(meter aqui el retorno de la query);
+            cargarTabla();
+        });
 
         tableViewPartidas.setOnMouseClicked(event ->
         {
@@ -256,18 +257,41 @@ public class PartidasController implements Initializable {
     {
         tablaPartidas.clear();
 
-        if(!listaRonda.isEmpty())
+        if(!comboRonda.getSelectionModel().isEmpty())
         {
-            comboFormato.getSelectionModel().getSelectedItem().getListaPartidas().forEach(item -> {
-                if(item.getRonda() == comboRonda.getSelectionModel().getSelectedItem())
-                {
-                    tablaPartidas.add(item);
-                }
-            });
+            if(DatosAdmin.cargarTorneosPartidas(comboRonda.getSelectionModel().getSelectedItem()).isEmpty())
+            {
+                int posTorneo = comboTorneo.getSelectionModel().getSelectedIndex();
+                int posFomato = comboFormato.getSelectionModel().getSelectedIndex();
+                int posRonda = comboRonda.getSelectionModel().getSelectedIndex();
 
-            tableViewPartidas.setItems(tablaPartidas);
-            tableViewPartidas.refresh();
-            tableViewPartidas.getSelectionModel().clearSelection();
+                listaTorneos.setAll(DatosAdmin.cargarTorneosPartidas(comboRonda.getSelectionModel().getSelectedItem()));
+                listaFormato.setAll(listaTorneos.get(posTorneo).getFormatoTorneo());
+                comboTorneo.getSelectionModel().select(posTorneo);
+                comboFormato.getSelectionModel().select(posFomato);
+                comboRonda.getSelectionModel().select(posRonda);
+
+                System.out.println("Hola");
+            }
+        }
+
+        if(!comboFormato.getSelectionModel().isEmpty())
+        {
+            if (!comboRonda.getSelectionModel().isEmpty())
+            {
+                comboFormato.getSelectionModel().getSelectedItem().getListaPartidas().forEach(item ->
+                {
+                    if (Integer.valueOf(item.getRonda()).equals(comboRonda.getSelectionModel().getSelectedItem()))
+                    {
+                        tablaPartidas.add(item);
+                        System.out.println("hola");
+                    }
+                });
+
+                tableViewPartidas.setItems(tablaPartidas);
+                tableViewPartidas.refresh();
+                tableViewPartidas.getSelectionModel().clearSelection();
+            }
         }
     }
 
@@ -293,16 +317,15 @@ public class PartidasController implements Initializable {
         jugadorNegras = new Jugador();
         adminDaoPartidas = new AdminDaoPartidas();
         filtroJugador = new ArrayList<>();
-        filtroGanadores = new ArrayList<>();
         tablaPartidas = FXCollections.observableArrayList();
         mesa = new SpinnerValueFactory.IntegerSpinnerValueFactory(1,50,1,1);
 
         DatosAdmin.vaciarLista();
 
         listaStaff = FXCollections.observableArrayList();
-        listaTorneos = DatosAdmin.cargarTorneosPartidas();
-        listaFormato = FXCollections.observableArrayList();
         listaRonda = FXCollections.observableArrayList();
+        listaTorneos = DatosAdmin.cargarTorneosPartidas(1);
+        listaFormato = FXCollections.observableArrayList();
     }
 
     private void desactivarBotonesLimpiar(boolean desactivar)
@@ -324,15 +347,21 @@ public class PartidasController implements Initializable {
             int idFormato = comboFormato.getSelectionModel().getSelectedItem().getIdFormatoTorneo();
             int idArbitro = comboArbitro.getSelectionModel().getSelectedItem().getId();
             int ronda = comboRonda.getSelectionModel().getSelectedItem();
-            int mesa = spinnerMesa.getValue();
+            int numMesa = spinnerMesa.getValue();
 
             String blancas = editBlancas.getText();
             String negras = editNegras.getText();
             String resultado = "Pendiente";
-            Partida partida = new Partida(idFormato, blancas, negras, resultado, resultado, mesa, ronda);
+            Partida partida = new Partida(idFormato, blancas, negras, resultado, resultado, numMesa, ronda);
             DatosAdmin.agregarPartida(partida, idArbitro, jugadorBlancas.getId(), jugadorNegras.getId());
-            DatosAdmin.cargarTorneosPartidas();
-            cargarTabla();
+
+            partida.setIdArbitro(idArbitro);
+            partida.setArbitro(comboArbitro.getSelectionModel().getSelectedItem().toString());
+            partida.setIdBlancas(jugadorBlancas.getId());
+            partida.setIdNegras(jugadorNegras.getId());
+
+            listaFormato.get(comboFormato.getSelectionModel().getSelectedIndex()).getListaPartidas().add(partida);
+            mesa.increment(+1);
         }
     }
 
@@ -347,7 +376,7 @@ public class PartidasController implements Initializable {
             btnRegistrar.disableProperty().set(false);
         }
 
-        if (filtroJugador.size() % 2 == 0)
+        if (comprobarMultiplo())
         {
             if(!filtroJugador.isEmpty())
             {
@@ -367,14 +396,85 @@ public class PartidasController implements Initializable {
                 jugadorNegras.setId(filtroJugador.get(numNegras).getId());
 
                 comboArbitro.getSelectionModel().select((int)(Math.random() * listaStaff.size()));
-                mesa.increment(+1);
             }
         }else
         {
-            VentanasController ventana = new VentanasController();
-            ventana.ventanaWarning("¡Falta un Jugador!", "Para que el Torneo se pueda realizar tiene " +
-                    "que dar de baja a un jugador o dar de alta.\n\n" +
-                    "Actualmente son ¡IMPARES!");
+            ventana = new VentanasController();
+            int faltante = numJugadoresFaltantes(filtroJugador.size()) - filtroJugador.size();
+            int sobrante = -1 * (filtroJugador.size() - numJugadoresFaltantes(filtroJugador.size()));
+
+            ventana.ventanaWarning("¡Faltan Jugadores!", "Para que el Torneo se pueda realizar tiene " +
+                    "que dar de baja a " + sobrante + " o dar de alta " + faltante  + " jugadores.\n\n" +
+                    "Actualmente no es un multiplo adecuado para este formato.");
+
+            btnRegistrar.disableProperty().set(true);
+            desactivarBotonesLimpiar(true);
+        }
+    }
+
+    private boolean comprobarMultiplo()
+    {
+        int numJugadores = adminDaoPartidas.totalJugadoresFormato(comboFormato.getSelectionModel()
+                .getSelectedItem().getIdFormatoTorneo());
+
+        if (comprobarPotencia(numJugadores))
+        {
+            return true;
+
+        } else
+        {
+            return false;
+        }
+    }
+
+    public boolean comprobarPotencia(int numJugadores)
+    {
+        if(numJugadores >= 1)
+        {
+            while (numJugadores % 4 == 0)
+            {
+                numJugadores /= 4;
+            }
+        }
+
+        if(numJugadores == 1)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public int numJugadoresFaltantes(int numJugadores)
+    {
+        int potencia = 1;
+
+        while (potencia < numJugadores)
+        {
+            potencia *= 2;
+        }
+        return potencia;
+    }
+
+    public void cargarEmparejar()
+    {
+        if(comboTorneo.getSelectionModel().getSelectedIndex() !=-1)
+        {
+            if(comboRonda.getSelectionModel().getSelectedItem() == 1)
+            {
+                // Me devuelva una lista donde los jugadores no tienen partida (sirva para la 1º Ronda)
+                filtroJugador = adminDaoPartidas.jugadoresSinPartida(comboFormato.getSelectionModel().getSelectedItem()
+                        .getIdFormatoTorneo(), comboRonda.getSelectionModel().getSelectedItem());
+            }else if(comboRonda.getSelectionModel().getSelectedItem() > 1)
+            {
+                // // Me devuelva una lista donde los jugadores no han Ganado la Ronda Anterior
+                filtroJugador = adminDaoPartidas.cargarGanadores(comboFormato.getSelectionModel().getSelectedItem()
+                        .getIdFormatoTorneo(), listaRonda.getLast()-1);
+                System.out.println(listaRonda.getLast()-1);
+                System.out.println(filtroJugador.size());
+            }
+        } else
+        {
+            ventana.ventanaWarning("¡Cuidado!", "Seleccione un Torneo y un Formato de Torneo primero");
         }
     }
 }

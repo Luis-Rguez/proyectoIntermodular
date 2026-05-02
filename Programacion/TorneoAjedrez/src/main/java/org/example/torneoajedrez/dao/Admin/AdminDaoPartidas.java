@@ -25,7 +25,7 @@ public class AdminDaoPartidas {
 
     private  VentanasController ventana;
 
-    public ObservableList<Partida> cargarPartidas(int idFormato, String color)
+    public ObservableList<Partida> cargarPartidas(int idFormato, String color, int partida)
     {
         ObservableList<Partida> listaPartidas = FXCollections.observableArrayList();
 
@@ -36,7 +36,7 @@ public class AdminDaoPartidas {
                         "INNER JOIN %s p ON p.%s = j.%s\n" +
                         "INNER JOIN %s st ON st.%s = p.%s\n" +
                         "INNER JOIN %s ft ON p.%s = ft.%s\n" +
-                        "WHERE p.%s = ? AND j.%s = ?",
+                        "WHERE p.%s = ? AND j.%s = ? AND p.%s = ?;",
                 DBSchem.ID_PARTIDA, DBSchem.ID_FORMATO_TORNEO, DBSchem.COL_NOMBRE_JUGADOR, DBSchem.COL_NOMBRE,
                 DBSchem.COL_APELLIDO, DBSchem.COL_RESULTADO, DBSchem.COL_MESA, DBSchem.ID_JUGADOR, DBSchem.COL_RONDA,
                 DBSchem.TAB_JUGADORES,
@@ -44,13 +44,14 @@ public class AdminDaoPartidas {
                 DBSchem.TAB_PARTIDAS, DBSchem.ID_PARTIDA, DBSchem.ID_PARTIDA,
                 DBSchem.TAB_STAFF, DBSchem.ID_STAFF, DBSchem.ID_STAFF,
                 DBSchem.TAB_FORMATO_TORNEO, DBSchem.ID_FORMATO_TORNEO, DBSchem.ID_FORMATO_TORNEO,
-                DBSchem.ID_FORMATO_TORNEO,DBSchem.COL_COLOR);
+                DBSchem.ID_FORMATO_TORNEO,DBSchem.COL_COLOR, DBSchem.COL_RONDA);
 
         try {
             preparedStatement = connection.prepareStatement(query);
 
             preparedStatement.setInt(1, idFormato);
             preparedStatement.setString(2,color);
+            preparedStatement.setInt(3, partida);
 
             resultSet = preparedStatement.executeQuery();
 
@@ -94,7 +95,7 @@ public class AdminDaoPartidas {
         preparedStatement = connection.prepareStatement(query);
 
         preparedStatement.setInt(1, idArbitro);
-        preparedStatement.setInt(2,partida.getId_formato());
+        preparedStatement.setInt(2, partida.getId_formato());
         preparedStatement.setInt(3, partida.getMesa());
         preparedStatement.setInt(4, partida.getRonda());
 
@@ -261,11 +262,13 @@ public class AdminDaoPartidas {
                         "INNER JOIN %s fj ON fj.%s = j.%s\n" +
                         "INNER JOIN %s ft ON ft.%s = fj.%s\n" +
                         "INNER JOIN %s jgn ON jgn.%s = j.%s\n" +
+                        "INNER JOIN %s p ON p.%s = jgn.%s\n" +
                         "WHERE jgn.%s = ? AND ft.%s = ? AND p.%s = ?;",
                 DBSchem.ID_JUGADOR, DBSchem.COL_NOMBRE_JUGADOR, DBSchem.TAB_JUGADORES,
                 DBSchem.TAB_JUGADOR_FORMATO, DBSchem.ID_JUGADOR, DBSchem.ID_JUGADOR,
                 DBSchem.TAB_FORMATO_TORNEO, DBSchem.ID_FORMATO_TORNEO, DBSchem.ID_FORMATO_TORNEO,
                 DBSchem.TAB_JUEGAN, DBSchem.ID_JUGADOR, DBSchem.ID_JUGADOR,
+                DBSchem.TAB_PARTIDAS, DBSchem.ID_PARTIDA, DBSchem.ID_PARTIDA,
                 DBSchem.COL_RESULTADO, DBSchem.ID_FORMATO_TORNEO, DBSchem.COL_RONDA);
 
         try
@@ -292,5 +295,35 @@ public class AdminDaoPartidas {
             ventana.ventanaError("No se ha podido Emparejar Aleatoriamente \n\nError: \n" + e.getMessage());
         }
         return jugadoresGanan;
+    }
+
+    public int totalJugadoresFormato(int idFormato)
+    {
+        int jugadores = 0;
+
+        connection = ConexionBBDD.getConnection();
+
+        String query = String.format("SELECT COUNT(%s) AS %s FROM %s WHERE %s = ?;",
+                DBSchem.ID_JUGADOR, "jugadores", DBSchem.TAB_JUGADOR_FORMATO, DBSchem.ID_FORMATO_TORNEO);
+
+        try
+        {
+            preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setInt(1,idFormato);
+
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next())
+            {
+                jugadores = resultSet.getInt("jugadores");
+            }
+
+        }catch (SQLException e)
+        {
+            ventana = new VentanasController();
+            ventana.ventanaError("No se ha podido Emparejar Aleatoriamente \n\nError: \n" + e.getMessage());
+        }
+        return jugadores;
     }
 }

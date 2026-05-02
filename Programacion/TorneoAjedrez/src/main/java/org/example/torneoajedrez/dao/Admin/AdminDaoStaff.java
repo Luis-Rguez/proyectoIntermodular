@@ -18,7 +18,9 @@ public class AdminDaoStaff {
 
     private ResultSet resultSet;
 
-    public ObservableList<Staff> cargarUsuarios()
+    private VentanasController ventana;
+
+    public ObservableList<Staff> cargarStaff()
     {
         ObservableList<Staff> listaUsuarios = FXCollections.observableArrayList();
         connection = ConexionBBDD.getConnection();
@@ -47,13 +49,13 @@ public class AdminDaoStaff {
             }
 
         } catch (SQLException e) {
-            VentanasController ventana = new VentanasController();
-            ventana.ventanaError("No se ha podido Realizar la Consulta \n\nErro: \n" + e.getMessage());
+            ventana = new VentanasController();
+            ventana.ventanaError("No se ha podido Realizar la Consulta \n\nError: \n" + e.getMessage());
         }
         return listaUsuarios;
     }
 
-    public Staff agregarUsuario(Staff staff) throws SQLException
+    public Staff agregarStaff(Staff staff) throws SQLException
     {
         connection = ConexionBBDD.getConnection();
 
@@ -80,7 +82,7 @@ public class AdminDaoStaff {
         return staff;
     }
 
-    public void editarUsuario(Staff staff) throws SQLException
+    public void editarStaff(Staff staff) throws SQLException
     {
         connection = ConexionBBDD.getConnection();
 
@@ -104,13 +106,12 @@ public class AdminDaoStaff {
             preparedStatement.setString(8, staff.getRol());
             preparedStatement.setDouble(9, staff.getSalario());
             preparedStatement.setLong(10, staff.getCuenta());
-
             preparedStatement.setInt(11, staff.getId());
 
             preparedStatement.executeUpdate();
     }
 
-    public boolean borrarUsuario(Staff staff)
+    public boolean borrarStaff(Staff staff)
     {
         connection = ConexionBBDD.getConnection();
 
@@ -129,7 +130,8 @@ public class AdminDaoStaff {
             borrar(staff);
         } catch(SQLException e)
         {
-            System.out.printf("Error al borrar al usuario %s %s\n\n %s",staff.getNombre(), staff.getApellido(), e.getMessage());
+            ventana = new VentanasController();
+            ventana.ventanaError(String.format("Error al borrar al usuario %s %s\n\n %s",staff.getNombre(), staff.getApellido(), e.getMessage()));
             return false;
         }
         return true;
@@ -152,7 +154,7 @@ public class AdminDaoStaff {
         preparedStatement.executeUpdate();
     }
 
-    public ObservableList<Staff> filtroTorneoUsuario(int torneo)
+    public ObservableList<Staff> filtroTorneoStaff(int torneo)
     {
         ObservableList<Staff> listaFiltrada= FXCollections.observableArrayList();
 
@@ -194,7 +196,7 @@ public class AdminDaoStaff {
             }
 
         } catch (SQLException e) {
-            VentanasController ventana = new VentanasController();
+            ventana = new VentanasController();
             ventana.ventanaError("Error en el filtado\n\nError: \n" + e.getMessage());
         }
         return listaFiltrada;
@@ -235,7 +237,6 @@ public class AdminDaoStaff {
 
         } catch (SQLException e)
         {
-            VentanasController ventana = new VentanasController();
             ventana.ventanaError("Error en el filtado\n\nError: \n" + e.getMessage());
         }
         return listaFiltrada;
@@ -258,7 +259,7 @@ public class AdminDaoStaff {
         preparedStatement.executeUpdate();
     }
 
-    public int idNuevoUsuario(int dni) throws SQLException
+    public int idNuevoStaff(String dni) throws SQLException
     {
         int idUsuario =0;
         connection = ConexionBBDD.getConnection();
@@ -269,7 +270,7 @@ public class AdminDaoStaff {
                                     DBSchem.COL_DNI);
 
         preparedStatement = connection.prepareStatement(query);
-        preparedStatement.setInt(1, dni);
+        preparedStatement.setString(1, dni);
 
         resultSet = preparedStatement.executeQuery();
 
@@ -301,14 +302,12 @@ public class AdminDaoStaff {
             while (resultSet.next())
             {
                 idTorneo = resultSet.getInt(DBSchem.ID_TORNEO);
-                System.out.println(idTorneo);
             }
 
         } catch (SQLException e) {
-            System.out.println("Error de consulta " + e.getMessage());
+            ventana = new VentanasController();
+            ventana.ventanaError("Error de consulta " + e.getMessage());
         }
-
-        System.out.println(idTorneo);
         return idTorneo;
     }
 }

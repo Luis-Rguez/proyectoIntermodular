@@ -5,7 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.Initializable;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.example.torneoajedrez.DataSet.DatosAdmin;
-import org.example.torneoajedrez.DataSet.DatosUser;
+import org.example.torneoajedrez.DataSet.DatosJugador;
 import org.example.torneoajedrez.controller.VentanasController;
 
 import java.net.URL;
@@ -123,7 +123,7 @@ public class UserController implements Initializable {
         int id = 1;
 
         jugador = userDao.cargarUsuario(id);
-        listaTorneos = DatosUser.filtroTorneoJugador(id);
+        listaTorneos = DatosJugador.filtroTorneoJugador(id);
         listaFormato = FXCollections.observableArrayList();
     }
 }

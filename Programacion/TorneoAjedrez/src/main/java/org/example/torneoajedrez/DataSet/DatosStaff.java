@@ -11,12 +11,12 @@ import org.example.torneoajedrez.model.Partida;
 public class DatosStaff
 {
     private static StaffDao staffDao = new StaffDao();
-    private static int idStaff =0;
+    private static int idStaff;
     private static ObservableList<Partida> listaPartidas = FXCollections.observableArrayList();
 /// ///////////////////////////////////////////////
     public static ObservableList<Partida> partidaPendientes()
     {
-        listaPartidas.setAll(staffDao.cargarPartidasStaff(1));
+        listaPartidas.setAll(staffDao.cargarPartidasStaff(idStaff));
         return listaPartidas;
     }
 
@@ -24,7 +24,12 @@ public class DatosStaff
         return listaPartidas;
     }
 
+    public static int getIdStaff()
+    {
+        return idStaff;
+    }
+
     public static void setIdStaff(int idUsuario) {
-        idStaff = idStaff;
+        idStaff = idUsuario;
     }
 }

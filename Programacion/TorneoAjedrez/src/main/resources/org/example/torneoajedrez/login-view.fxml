@@ -11,8 +11,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<GridPane maxHeight="300.0" maxWidth="600.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25"
-           xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.torneoajedrez.controller.LoginController">
+<GridPane maxHeight="300.0" maxWidth="600.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.torneoajedrez.controller.LoginController">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -30,7 +29,7 @@
                 <Font name="System Bold" size="24.0" />
             </font>
         </Text>
-        <TextField fx:id="editDNI" alignment="CENTER" maxHeight="25.6" maxWidth="400.0" promptText="DNI" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+        <TextField fx:id="editMail" alignment="CENTER" maxHeight="25.6" maxWidth="400.0" promptText="E-mail" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1">
             <GridPane.margin>
                 <Insets left="100.0" right="100.0" />
             </GridPane.margin>

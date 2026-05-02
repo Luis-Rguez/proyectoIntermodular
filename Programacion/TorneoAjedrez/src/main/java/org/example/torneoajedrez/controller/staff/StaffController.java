@@ -1,6 +1,5 @@
 package org.example.torneoajedrez.controller.staff;
 
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.Initializable;
@@ -12,11 +11,13 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
+import org.example.torneoajedrez.DataSet.DatosAdmin;
 import org.example.torneoajedrez.DataSet.DatosStaff;
 import org.example.torneoajedrez.controller.VentanasController;
 import org.example.torneoajedrez.dao.Staff.StaffDao;
 import org.example.torneoajedrez.model.Movimientos;
 import org.example.torneoajedrez.model.Partida;
+
 
 public class StaffController implements Initializable {
 
@@ -42,7 +43,7 @@ public class StaffController implements Initializable {
     private TextField editMovBlancas, editMovNegras;
 
     @FXML
-    private Text textJugadorN, textJugadorB, textVS, textBlancas, textNegras;
+    private Text textJugadorN, textJugadorB, textVS;
 
     private VentanasController ventana;
     private StaffDao staffDao;
@@ -89,7 +90,7 @@ public class StaffController implements Initializable {
         btnFinPartida.setOnAction(event ->
         {
             int idPartida = comboPartidas.getSelectionModel().getSelectedItem().getId();
-            int idBlanca = comboPartidas.getSelectionModel().getSelectedItem().getIdBlancas();
+            int idBlancas = comboPartidas.getSelectionModel().getSelectedItem().getIdBlancas();
             int idNegras = comboPartidas.getSelectionModel().getSelectedItem().getIdNegras();
 
             if (comboGanan.getSelectionModel().getSelectedIndex() ==-1)
@@ -102,24 +103,25 @@ public class StaffController implements Initializable {
             {
                 case "Tablas" ->
                 {
-                    staffDao.actualizarResultado(idPartida, idBlanca, comboGanan.getSelectionModel().getSelectedItem());
+                    staffDao.actualizarResultado(idPartida, idBlancas, comboGanan.getSelectionModel().getSelectedItem());
                     staffDao.actualizarResultado(idPartida, idNegras, comboGanan.getSelectionModel().getSelectedItem());
+                    partidaDesempate(idBlancas, idNegras);
+                    instancias();
+                    initGUI();
                 }
 
                 case "Blancas" ->
                 {
-                    staffDao.actualizarResultado(idPartida,idBlanca, "Ganan");
+                    staffDao.actualizarResultado(idPartida,idBlancas, "Ganan");
                     staffDao.actualizarResultado(idPartida,idNegras, "Pierden");
                 }
 
                 case "Negras" ->
                 {
                     staffDao.actualizarResultado(idPartida,idNegras, "Ganan");
-                    staffDao.actualizarResultado(idPartida,idBlanca, "Pierden");
+                    staffDao.actualizarResultado(idPartida,idBlancas, "Pierden");
                 }
             }
-            cargarPartidasListado();
-            cargarTextosTabla();
         });
 
         //------------------------- COMBOS BOTONES ----------------------------------------------------
@@ -127,19 +129,40 @@ public class StaffController implements Initializable {
         {
             cargarTextosTabla();
         });
+    }
 
+    private void partidaDesempate(int idBlancas, int idNegras)
+    {
+        int idFormato = comboPartidas.getSelectionModel().getSelectedItem().getId_formato();
+        int mesa = comboPartidas.getSelectionModel().getSelectedItem().getMesa();
+        int ronda = comboPartidas.getSelectionModel().getSelectedItem().getMesa();
+        int idPartida = comboPartidas.getSelectionModel().getSelectedItem().getId();
+        String nomBlancas = comboPartidas.getSelectionModel().getSelectedItem().getBlancas();
+        String nomNegras = comboPartidas.getSelectionModel().getSelectedItem().getNegras();
+
+        Partida partida = new Partida(idPartida, idBlancas, nomBlancas, idNegras, nomNegras, mesa, ronda, idFormato);
+        partida.setResulBlancas("Pendiente");
+        partida.setResulNegras("Pendiente");
+
+        // Para el desempate ahora las blancas juegan con negras y las negras con blancas, por ese en el campo de id Blancas
+        // poner el idNegras al llamar a la funcion de DatosAdmin para crear una nueva partida
+        DatosAdmin.agregarPartida(partida,DatosStaff.getIdStaff(),idNegras, idBlancas);
     }
 
     private void cargarTextosTabla()
     {
         if(!listaPartida.isEmpty())
         {
-            textJugadorB.setText(comboPartidas.getSelectionModel().getSelectedItem().getBlancas());
-            textJugadorN.setText(comboPartidas.getSelectionModel().getSelectedItem().getNegras());
+            if(comboPartidas.getSelectionModel().getSelectedItem() != null)
+            {
+                textJugadorB.setText(comboPartidas.getSelectionModel().getSelectedItem().getBlancas());
+                textJugadorN.setText(comboPartidas.getSelectionModel().getSelectedItem().getNegras());
 
-            comboPartidas.getSelectionModel().selectFirst();
-            tablaMovimientos.setAll(staffDao.cargarMovimientos(comboPartidas.getSelectionModel().getSelectedItem().getId()));
-            tablaViewMovimientos.refresh();
+                comboPartidas.getSelectionModel().selectFirst();
+                tablaMovimientos.setAll(staffDao.cargarMovimientos(comboPartidas.getSelectionModel().getSelectedItem().getId()));
+                tablaViewMovimientos.refresh();
+            }
+
         }else
         {
             textVS.setText("Ronda Finalizada");

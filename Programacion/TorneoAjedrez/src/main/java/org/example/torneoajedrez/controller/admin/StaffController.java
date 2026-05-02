@@ -123,7 +123,7 @@ public class StaffController implements Initializable {
             {
                 if(ventana.ventanaConfirmacion("Borrar Usuario", String.format("¿Esta Seguro de querer Borrar al usuario %s %s?", staff.getNombre(), staff.getApellido())))
                 {
-                    DatosAdmin.borrarUsuario(staff);
+                    DatosAdmin.borrarStaff(staff);
                     vaciarCampos();
                 }
             }
@@ -252,10 +252,10 @@ public class StaffController implements Initializable {
             {
                 try
                 {
-                    DatosAdmin.agregarUsuario(adminDaoStaff.agregarUsuario(staff));
-                    staff.setId(adminDaoStaff.idNuevoUsuario(Integer.parseInt(staff.getDni())));
                     if(idTorneo > 0)
                     {
+                        DatosAdmin.agregarStaff(adminDaoStaff.agregarStaff(staff));
+                        staff.setId(adminDaoStaff.idNuevoStaff(staff.getDni()));
                         adminDaoStaff.insertTorneoStaff(idTorneo, staff.getId());
                     }
                 } catch (SQLException e)
@@ -266,14 +266,10 @@ public class StaffController implements Initializable {
             {
                 try
                 {
-                    DatosAdmin.editarUsuario(staff);
-                    if(idTorneo >0)
-                    {
-                        adminDaoStaff.insertTorneoStaff(idTorneo, staff.getId());
-                    }
+                    DatosAdmin.editarStaff(staff);
                 }catch (SQLException e)
                 {
-                    ventana.ventanaError("Error al editar al usuario "+staff.getNombre() + " " + staff.getApellido() + "\\n\\n" + e.getMessage());
+                    ventana.ventanaError("Error al editar al usuario "+ staff.getNombre() + " " + staff.getApellido() + "\\n\\n" + e.getMessage());
                 }
             }
             vaciarCampos();

@@ -16,7 +16,7 @@ public class AdminController implements Initializable {
     private Button btnClasificacion, btnVer, btnClubs, btnPartidas, btnProveedores, btnSalir;
 
     @FXML
-    private Button btnStaff, btnTroenos, btnUsuarios;
+    private Button btnStaff, btnTroenos, btnJugadores;
 
     @FXML
     private MenuBar menuBarra;
@@ -65,7 +65,7 @@ public class AdminController implements Initializable {
 
         // Acciones de los Botones de la Pantalla Principal
         btnProveedores.setOnAction(event -> ventana.abrirVentanas(btnSalir,"admin/adminPatrocinador-view.fxml", "Registro de Patrocinadores", true));
-        btnUsuarios.setOnAction(event -> ventana.abrirVentanas(btnSalir,"admin/adminUsuario-view.fxml", "Registro de Usuarios", true));
+        btnJugadores.setOnAction(event -> ventana.abrirVentanas(btnSalir,"admin/adminUsuario-view.fxml", "Registro de Usuarios", true));
         btnStaff.setOnAction(event -> ventana.abrirVentanas(btnSalir,"admin/adminStaff-view.fxml", "Registro de Personal", true));
         btnClubs.setOnAction(event -> ventana.abrirVentanas(btnSalir,"admin/adminClubs-view.fxml", "Registro de Club", true));
         btnTroenos.setOnAction(event -> ventana.abrirVentanas(btnSalir,"admin/adminTorneo-view.fxml", "Registro de Torneos", true));

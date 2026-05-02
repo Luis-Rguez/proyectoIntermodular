@@ -28,14 +28,14 @@ public class StaffDao {
 
         connection = ConexionBBDD.getConnection();
 
-        String query = String.format("SELECT p.%s, jb.%s as %s, jb.%s as %s, jn.%s as %s, jn.%s as %s FROM %s p\n" +
+        String query = String.format("SELECT p.%s, p.%s, p.%s, p.%s, jb.%s as %s, jb.%s as %s, jn.%s as %s, jn.%s as %s FROM %s p\n" +
                         "INNER JOIN %s jgb ON p.%s = jgb.%s AND jgb.%s = ?\n" +
                         "INNER JOIN %s jb ON jb.%s = jgb.%s\n" +
                         "INNER JOIN %s jgn ON p.%s = jgn.%s AND jgn.%s = ?\n" +
                         "INNER JOIN %s jn ON jn.%s = jgn.%s\n" +
                         "INNER JOIN %s st ON st.%s = p.%s\n" +
                         "WHERE st.%s = ? AND jgn.%s = ? AND jgb.%s = ?;",
-                DBSchem.ID_PARTIDA, DBSchem.COL_NOMBRE_JUGADOR,"Blancas", DBSchem.ID_JUGADOR, "idBlancas",
+                DBSchem.ID_PARTIDA, DBSchem.COL_MESA, DBSchem.COL_RONDA, DBSchem.ID_FORMATO_TORNEO, DBSchem.COL_NOMBRE_JUGADOR,"Blancas", DBSchem.ID_JUGADOR, "idBlancas",
                 DBSchem.COL_NOMBRE_JUGADOR, "Negras", DBSchem.ID_JUGADOR, "idNegras",
                 DBSchem.TAB_PARTIDAS,
                 DBSchem.TAB_JUEGAN, DBSchem.ID_PARTIDA, DBSchem.ID_PARTIDA, DBSchem.COL_COLOR,
@@ -61,10 +61,13 @@ public class StaffDao {
                 int idPartida = resultSet.getInt(DBSchem.ID_PARTIDA);
                 int idJugadorB = resultSet.getInt("idBlancas");
                 int idJugadorN = resultSet.getInt("idNegras");
+                int mesa = resultSet.getInt(DBSchem.COL_MESA);
+                int ronda = resultSet.getInt(DBSchem.COL_RONDA);
+                int idFormato = resultSet.getInt(DBSchem.ID_FORMATO_TORNEO);
                 String nombreJugadorB = resultSet.getString("Blancas");
                 String nombreJugadorN = resultSet.getString("Negras");
 
-                listaPartidas.add(new Partida(idPartida, idJugadorB, nombreJugadorB, idJugadorN, nombreJugadorN));
+                listaPartidas.add(new Partida(idPartida, idJugadorB, nombreJugadorB, idJugadorN, nombreJugadorN, mesa, ronda, idFormato));
             }
 
         } catch (SQLException e) {
@@ -147,4 +150,5 @@ public class StaffDao {
         }
         return listaMovimientos;
     }
+
 }

@@ -26,6 +26,12 @@ public class Formato {
         listaPartidas = FXCollections.observableArrayList();
     }
 
+    public Formato(String categoria, int idFormato) {
+        this.categoria = categoria;
+        this.idFormatoTorneo = idFormato;
+        listaPartidas = FXCollections.observableArrayList();
+    }
+
     public Formato(String categoria, int idTorneo, int idFormatoTorneo)
     {
         this.categoria = categoria;
