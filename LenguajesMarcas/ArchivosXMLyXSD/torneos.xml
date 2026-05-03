@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<torneos xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="esquemaAjedrez.xsd">
+
+    <torneo id="1">
+        <nombre>Master Chess</nombre>
+        <fechaInicio>2026-04-10</fechaInicio>
+        <fechaFin>2026-04-20</fechaFin>
+
+        <partidas>
+
+            <partida id="1">
+                <ronda>1</ronda>
+                <mesa>1</mesa>
+
+                <blancas jugadorId="1">
+                    <nombre>Mario Kart</nombre>
+                    <resultado>1</resultado>
+                </blancas>
+
+                <negras jugadorId="2">
+                    <nombre>Luigui Mansion</nombre>
+                    <resultado>0</resultado>
+                </negras>
+
+                <arbitro>Antonio López</arbitro>
+
+                <movimientos>
+
+                    <movimiento id="1">
+                        <blancas>e4</blancas>
+                        <negras>e5</negras>
+                    </movimiento>
+
+                    <movimiento id="2">
+                        <blancas>Nf3</blancas>
+                        <negras>Nc6</negras>
+                    </movimiento>
+
+                </movimientos>
+
+            </partida>
+
+            <partida id="2">
+                <ronda>1</ronda>
+                <mesa>2</mesa>
+
+                <blancas jugadorId="3">
+                    <nombre>Peich Princesa</nombre>
+                    <resultado>0.5</resultado>
+                </blancas>
+
+                <negras jugadorId="4">
+                    <nombre>Toad Champi</nombre>
+                    <resultado>0.5</resultado>
+                </negras>
+
+                <arbitro>María Sánchez</arbitro>
+
+                <movimientos>
+
+                    <movimiento id="3">
+                        <blancas>d4</blancas>
+                        <negras>d5</negras>
+                    </movimiento>
+
+                </movimientos>
+
+            </partida>
+
+        </partidas>
+
+    </torneo>
+
+</torneos>
