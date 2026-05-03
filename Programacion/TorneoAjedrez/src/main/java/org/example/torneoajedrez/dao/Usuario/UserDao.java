@@ -158,9 +158,4 @@ public class UserDao {
             ventana.ventanaError("No se ha podido Realizar la Consulta \n\nError: \n" + e.getMessage());
         }
     }
-
-    public void nombreJugador()
-    {
-
-    }
 }
