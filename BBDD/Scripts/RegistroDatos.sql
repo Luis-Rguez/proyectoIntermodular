@@ -60,19 +60,19 @@ INSERT INTO  club (id_Tipo_Torneo, Nombre_Club, MAIL, Nombre_Representante, Telf
 (4, 'Club Chess Aventura', 'chessaventura@example.com', 'Tio Gilito', '675848979'),
 (5, 'Club GM', 'chessclubGMa@example.com', 'Garry Kasparov', '671033299');
 
-INSERT INTO jugadores (id_Club, Nombre_jugador, DNI, MAIL, Telefono) VALUES
-(null, 'Juan Gonzalez', '11122233P','juan@example.es','666999666'),
-(null, 'Mario Kart', '77777777P','mario@example.es','666666666'),
-(null, 'Gonzalez Rosales', '11111111Z','rosales@example.es','699999999'),
-(null, 'Luigui', '22222222O','luigui@example.es','612333555'),
-(3, 'Joshie Mario', '74125412L','joshie@example.es','644555681'),
-(4, 'Don King Kong', '88888888J','donking@example.es','674747845'),
-(6, 'Zelda Ds', '99955661F','zelda@example.es','632000010'),
-(7, 'Moises Gonzalez', '11133333P','moy@example.es','666999666'),
-(null, 'Bobby Fische', '87412365L','bobby@example.es','600000001'),
-(null, 'Raúl Capablanca', '85214774S','capablanca@example.es','695620315'),
-(null, 'Rey Koopa', '66666666P','koopa@example.es','852147963'),
-(null, 'Toad champi', '753426687P','toad@example.es','688421111');
+INSERT INTO jugadores (id_Club, Nombre_jugador, DNI, MAIL, Telefono, pass) VALUES
+(null, 'Juan Gonzalez', '11122233P','juan@example.es','666999666', '1111'),
+(null, 'Mario Kart', '77777777P','mario@example.es','666666666', '1111'),
+(null, 'Gonzalez Rosales', '11111111Z','rosales@example.es','699999999', '1111'),
+(null, 'Luigui', '22222222O','luigui@example.es','612333555', '1111'),
+(3, 'Joshie Mario', '74125412L','joshie@example.es','644555681', '1111'),
+(4, 'Don King Kong', '88888888J','donking@example.es','674747845', '1111'),
+(6, 'Zelda Ds', '99955661F','zelda@example.es','632000010', '1111'),
+(7, 'Moises Gonzalez', '11133333P','moy@example.es','666999666', '1111'),
+(null, 'Bobby Fische', '87412365L','bobby@example.es','600000001', '1111'),
+(null, 'Raúl Capablanca', '85214774S','capablanca@example.es','695620315', '1111'),
+(null, 'Rey Koopa', '66666666P','koopa@example.es','852147963', '1111'),
+(null, 'Toad champi', '753426687P','toad@example.es','688421111', '1111');
 
 INSERT INTO Torneo_Inscritos_Jugadores (id_Tipo_Torneo, id_Jugador) VALUES
 (1,1),
@@ -116,5 +116,3 @@ INSERT INTO clasificacion (id_Tipo_Torneo, id_Jugador, Puntuacion, Clasificatori
 (1, 4, null, 'Segundo Puesto'),
 (4, 7, 100, 'Primer Puesto'),
 (4, 8, 80, 'Segundo Puesto');
-
-select * from jugadores;
