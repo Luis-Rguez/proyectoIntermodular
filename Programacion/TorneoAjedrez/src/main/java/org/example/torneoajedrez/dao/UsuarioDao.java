@@ -44,4 +44,33 @@ public class UsuarioDao {
         }
         return idUsuario;
     }
+
+    public int getLoginRol(String mail, String pass, String tabla, String id)
+    {
+        int idUsuario = 0;
+
+        String query = String.format("SELECT %s FROM %s WHERE %s = ? AND %s = ? AND %s =?;",
+                id, tabla, DBSchem.COL_EMAIL, DBSchem.COL_PASS, DBSchem.COL_ROL);
+
+        connection = ConexionBBDD.getConnection();
+
+        try{
+
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, mail);
+            preparedStatement.setString(2, pass);
+            preparedStatement.setString(3, "admin");
+
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next())
+            {
+                idUsuario = resultSet.getInt(id);
+            }
+        } catch (SQLException e) {
+            ventana = new VentanasController();
+            ventana.ventanaError("Se ha Producido un Error: \n\n" + e.getMessage());
+        }
+        return idUsuario;
+    }
 }

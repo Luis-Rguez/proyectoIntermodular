@@ -120,10 +120,8 @@ public class UserController implements Initializable {
 
         DatosAdmin.vaciarLista();
 
-        int id = 1;
-
-        jugador = userDao.cargarUsuario(id);
-        listaTorneos = DatosJugador.filtroTorneoJugador(id);
+        jugador = userDao.cargarUsuario(DatosJugador.getIdJugador());
+        listaTorneos = DatosJugador.filtroTorneoJugador(DatosJugador.getIdJugador());
         listaFormato = FXCollections.observableArrayList();
     }
 }
