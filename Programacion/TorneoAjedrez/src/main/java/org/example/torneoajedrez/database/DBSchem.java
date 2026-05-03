@@ -60,4 +60,8 @@ public interface DBSchem {
     //CLASIFICACION
     String ID_CLASIFICAION = "id_clasificacion";
     String COL_PUESTO = "clasificatoria";
+
+    //
+    String COL_INICIO = "fecha_inicio";
+    String COL_FIN = "fecha_fin";
 }

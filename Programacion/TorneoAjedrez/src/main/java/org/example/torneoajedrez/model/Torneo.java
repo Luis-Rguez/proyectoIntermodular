@@ -15,8 +15,8 @@ import lombok.Setter;
 
 public class Torneo {
 
-    private String nombre;
-    private int idTorneo;
+    private String nombre, recinto, fechaInicio, fechaFin, formato;
+    private int idTorneo,idFormato, numParticipantes;
     private ObservableList<Formato> formatoTorneo;
 
     public Torneo(String torneo, int idTorneo) {
@@ -30,6 +30,16 @@ public class Torneo {
         this.idTorneo = idTorneo;
         this.nombre = nombre;
         formatoTorneo = FXCollections.observableArrayList();
+    }
+
+    public Torneo(int idTorneo, String nombre, String fechaInicio, String fechaFin, String formato, int idFormato)
+    {
+        this.idTorneo = idTorneo;
+        this.nombre = nombre;
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
+        this.formato = formato;
+        this.idFormato = idFormato;
     }
 
     public void agregarFormato(String nombre_Formato)

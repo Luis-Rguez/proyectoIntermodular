@@ -36,45 +36,35 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="btnProveedores" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="55.0" prefWidth="180.0" text="Proveedores" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+            <Button fx:id="btnTroenos" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="55.0" prefWidth="200.0" text="Torneos" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button fx:id="btnStaff" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="55.0" prefWidth="200.0" text="Staff" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+            <Button fx:id="btnPartidas" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="55.0" prefWidth="200.0" text="Partidas" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="3">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button fx:id="btnJugadores" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="55.0" prefWidth="200.0" text="Jugadores" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4">
+            <Button fx:id="btnStaff" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="55.0" prefWidth="200.0" text="Staff" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button fx:id="btnClubs" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="55.0" prefWidth="200.0" text="Clubs" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
-            <Button fx:id="btnTroenos" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="55.0" prefWidth="200.0" text="Torneos" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="6">
+            <Button fx:id="btnJugadores" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="55.0" prefWidth="200.0" text="Jugadores" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="5">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button fx:id="btnPartidas" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="55.0" prefWidth="200.0" text="Partidas" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="6">
+            <Button fx:id="btnClasificacion" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="55.0" prefWidth="200.0" text="Clasificacion" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="7">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button fx:id="btnClasificacion" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="55.0" prefWidth="200.0" text="Clasificacion" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="8">
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </Button>
-            <Button fx:id="btnVer" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="55.0" prefWidth="200.0" text="Ver Partidas" GridPane.columnIndex="3" GridPane.rowIndex="8">
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </Button>
-            <Button fx:id="btnSalir" alignment="CENTER" mnemonicParsing="false" prefHeight="55.0" prefWidth="200.0" text="Salir" GridPane.columnIndex="2" GridPane.rowIndex="10">
+            <Button fx:id="btnSalir" alignment="CENTER" mnemonicParsing="false" prefHeight="55.0" prefWidth="200.0" text="Salir" GridPane.columnIndex="2" GridPane.rowIndex="11">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -102,16 +92,13 @@
           </Menu>
           <Menu fx:id="menuRegistros" mnemonicParsing="false" text="Registros">
             <items>
-              <MenuItem fx:id="menuItemClubs" mnemonicParsing="false" text="Clubs" />
                   <MenuItem fx:id="menuItemJugadores" mnemonicParsing="false" text="Jugadores" />
                   <MenuItem fx:id="menuItemStaff" mnemonicParsing="false" text="Staff" />
-                  <MenuItem fx:id="menuItemPatrocinador" mnemonicParsing="false" text="Patrocinador" />
             </items>
           </Menu>
           <Menu fx:id="menuPartidas" mnemonicParsing="false" text="Partidas">
             <items>
               <MenuItem fx:id="menuItemOrganizar" mnemonicParsing="false" text="Organizar Partidas" />
-                  <MenuItem fx:id="menuItemVer" mnemonicParsing="false" text="Ver Partidas" />
                   <MenuItem fx:id="menuItemClasificacion" mnemonicParsing="false" text="Clasificacion" />
             </items>
           </Menu>

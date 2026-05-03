@@ -119,16 +119,13 @@
           </Menu>
           <Menu fx:id="menuRegistro" mnemonicParsing="false" text="Registro">
             <items>
-              <MenuItem fx:id="menuItemClubs" mnemonicParsing="false" text="Clubs" />
                   <MenuItem fx:id="menuItemJugadores" mnemonicParsing="false" text="Jugadores" />
                   <MenuItem fx:id="menuItemStaff" mnemonicParsing="false" text="Staff" />
-                  <MenuItem fx:id="menuItemPatrocinador" mnemonicParsing="false" text="Patrocinadores" />
             </items>
           </Menu>
           <Menu fx:id="menuPartidas" mnemonicParsing="false" text="Partidas">
             <items>
               <MenuItem fx:id="menuItemOrganizar" mnemonicParsing="false" text="Organizar Partidas" />
-                  <MenuItem fx:id="menuItemVer" mnemonicParsing="false" text="Ver Partidas" />
                   <MenuItem fx:id="menuItemClasificacion" mnemonicParsing="false" text="Clasificacion" />
             </items>
           </Menu>

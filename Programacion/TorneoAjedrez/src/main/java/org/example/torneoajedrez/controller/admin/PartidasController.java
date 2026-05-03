@@ -27,11 +27,11 @@ public class PartidasController implements Initializable {
 
     // Item Registros
     @FXML
-    private MenuItem menuItemClubs, menuItemPatrocinador,menuItemJugadores, menuItemStaff;
+    private MenuItem menuItemJugadores, menuItemStaff;
 
     // Item Partidas
     @FXML
-    private MenuItem menuItemOrganizar, menuItemVer, menuItemClasificacion;
+    private MenuItem menuItemOrganizar, menuItemClasificacion;
 
     // Botones
     @FXML
@@ -78,7 +78,6 @@ public class PartidasController implements Initializable {
     private ArrayList<Jugador> filtroJugador;
 
     private AdminDaoPartidas adminDaoPartidas;
-    private AdminDaoFormatos adminDaoFormatos;
     private Jugador jugadorBlancas;
     private Jugador jugadorNegras;
 
@@ -94,14 +93,10 @@ public class PartidasController implements Initializable {
     {
         // Acciones de los Items de la Barra Menu
         menuItemTorneo.setOnAction(event -> ventana.abrirVentanas(btnSalir,"admin/adminTorneo-view.fxml", "Registro de Torneos", true));
-        menuItemClubs.setOnAction(event -> ventana.abrirVentanas(btnSalir,"admin/adminClubs-view.fxml", "Registro de Club", true));
         menuItemJugadores.setOnAction(event -> ventana.abrirVentanas(btnSalir,"admin/adminUsuario-view.fxml", "Registro de Jugadores", true));
         menuItemStaff.setOnAction(event -> ventana.abrirVentanas(btnSalir,"admin/adminStaff-view.fxml", "Registro de Personal", true));
-        menuItemPatrocinador.setOnAction(event -> ventana.abrirVentanas(btnSalir,"admin/adminPatrocinador-view.fxml", "Registro de Patrocinadores", true));
         menuItemOrganizar.setOnAction(event -> ventana.abrirVentanas(btnSalir,"admin/adminPartidas-view.fxml", "Organizar Partidas", true));
-        menuItemVer.setOnAction(event -> ventana.abrirVentanas(btnSalir,"verPartidas-view.fxml", "Partidas", true));
         menuItemClasificacion.setOnAction(event -> ventana.abrirVentanas(btnSalir,"admin/adminClasificacion-view.fxml", "Clasificacion", true));
-
         menuItemCerrarSesion.setOnAction(event ->
         {
             if(ventana.ventanaConfirmacion("¿Cerrar Sesion?", "¿Esta seguro de querer cesarr la sesion?"))
@@ -109,6 +104,7 @@ public class PartidasController implements Initializable {
                 ventana.abrirVentanas(btnSalir,pathLogin, "Login", true);
             }
         });
+        menuItemSalir.setOnAction(event -> ventana.cerrarVentana(btnSalir));
         menuItemSalir.setOnAction(event -> ventana.cerrarVentana(btnSalir));
 
 
@@ -201,9 +197,6 @@ public class PartidasController implements Initializable {
                     if(!listaFormato.isEmpty())
                     {
                         comboFormato.getSelectionModel().selectFirst();
-                    }else
-                    {
-                       // listaFormato.setAll(adminDaoFormatos.cargarFormatoTorneo(comboTorneo.getSelectionModel().getSelectedItem().getIdTorneo()));
                     }
                 }
                 if(listaStaff.isEmpty() || listaTorneos.get(indicelista).getFormatoTorneo().isEmpty())
@@ -276,7 +269,6 @@ public class PartidasController implements Initializable {
         jugadorBlancas = new Jugador();
         jugadorNegras = new Jugador();
         adminDaoPartidas = new AdminDaoPartidas();
-        adminDaoFormatos = new AdminDaoFormatos();
         filtroJugador = new ArrayList<>();
         tablaPartidas = FXCollections.observableArrayList();
         mesa = new SpinnerValueFactory.IntegerSpinnerValueFactory(1,50,1,1);
