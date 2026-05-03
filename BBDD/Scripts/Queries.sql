@@ -109,3 +109,16 @@ INNER JOIN juegan jgn ON p.id_partida = jgn.id_partida
 INNER JOIN jugadores jn ON jn.id_jugador = jgn.id_jugador AND jgn.color = 'Negras'
 INNER JOIN staff st ON st.id_staff = p.id_staff
 WHERE st.id_staff = 1 AND jgn.resultado = 'Pendiente';
+
+-- Muestras las estadisticas de los diferentes torneos que ha participado un Jugador concreto
+SELECT t.nombre, ft.categoria, c.clasificatoria, 
+SUM(CASE WHEN jg.resultado = 'Ganan' THEN 1 ELSE 0 END) AS ganadas,
+SUM(CASE WHEN jg.resultado = 'Pierden' THEN 1 ELSE 0 END) AS Perdidas, 
+SUM(CASE WHEN jg.resultado = 'Tablas' THEN 1 ELSE 0 END) AS Tablas FROM jugadores j
+INNER JOIN torneo_inscritos_jugadores tj ON tj.id_jugador = j.id_jugador
+INNER JOIN formato_torneo ft ON ft.id_tipo_torneo = tj.id_tipo_torneo
+INNER JOIN clasificacion c ON c.id_jugador = j.id_jugador AND c.id_tipo_torneo = ft.id_tipo_torneo
+INNER JOIN torneo t ON t.id_torneo = ft.id_torneo
+INNER JOIN juegan jg ON jg.id_jugador = j.id_jugador
+WHERE j.id_jugador = 1
+GROUP BY t.nombre, ft.categoria, c.clasificatoria;
