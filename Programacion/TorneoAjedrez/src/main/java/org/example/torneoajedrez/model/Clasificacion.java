@@ -29,4 +29,13 @@ public class Clasificacion {
         this.nombreJugador = nombreJugador;
         this.ganadas = ganadas;
     }
+
+    public Clasificacion(String nombreTorneo, String nombreFormato, String puesto, int ganadas, int perdidas, int tablas) {
+        this.nombreTorneo = nombreTorneo;
+        this.nombreFormato = nombreFormato;
+        this.puesto = puesto;
+        this.ganadas = ganadas;
+        this.perdidas = perdidas;
+        this.tablas = tablas;
+    }
 }

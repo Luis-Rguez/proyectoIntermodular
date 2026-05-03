@@ -1,5 +1,6 @@
 package org.example.torneoajedrez.controller.user;
 
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.Initializable;
@@ -10,10 +11,8 @@ import org.example.torneoajedrez.controller.VentanasController;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -21,15 +20,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import org.example.torneoajedrez.dao.Usuario.UserDao;
 import org.example.torneoajedrez.model.Clasificacion;
-import org.example.torneoajedrez.model.Formato;
 import org.example.torneoajedrez.model.Jugador;
-import org.example.torneoajedrez.model.Torneo;
 
 public class UserController implements Initializable {
 
     @FXML
     private TableView<Clasificacion> tableViewHistorial;
-    private ObservableList listaHistorial;
+    private ObservableList<Clasificacion> listaHistorial;
 
     @FXML
     private TableColumn<Clasificacion, String> colNombreTorneo, colFormato, colClasificacion;
@@ -38,24 +35,16 @@ public class UserController implements Initializable {
     private TableColumn<Clasificacion, Integer> colPerdidas, colTablas, colGanadas;
 
     @FXML
-    private ComboBox<Formato> comboFormato;
-    private ObservableList<Formato> listaFormato;
-
-    @FXML
-    private ComboBox<Torneo> comboToreno;
-    private ObservableList<Torneo> listaTorneos;
-
-    @FXML
-    private TextField editDNI,editEdad, editMail, editNombre, editPass, editTelef, editNewPass;
+    private TextField editDNI, editMail, editNombre, editPass, editTelef, editNewPass;
 
     @FXML
     private Text textNewPass;
 
     @FXML
-    private MenuItem menuItemCerrar, menuItemVer, menuItemPerfil, menuItemSalir;
+    private MenuItem menuItemCerrar,menuItemPerfil, menuItemSalir;
 
     @FXML
-    private Button btnBaja, btnEditar, btnSalir, btnVerPartida, btnAceptar;
+    private Button btnBaja, btnEditar, btnSalir, btnAceptar;
 
     private String pathLogin;
     private VentanasController ventana;
@@ -74,7 +63,6 @@ public class UserController implements Initializable {
     {
         //--------------------- BARRA MENU --------------------------------------------------------
         menuItemPerfil.setOnAction(event -> ventana.abrirVentanas(btnSalir,"user/UsuarioPerfil-view.fxml", "Registro de Torneos", true));
-        menuItemVer.setOnAction(event -> ventana.abrirVentanas(btnSalir,"verPartidas-view.fxml", "Partidas", true));
         menuItemSalir.setOnAction(event -> ventana.cerrarVentana(btnSalir));
         menuItemCerrar.setOnAction(event ->
         {
@@ -86,17 +74,49 @@ public class UserController implements Initializable {
 
         //--------------------- ACIONES BOTONES --------------------------------------------------------
         btnSalir.setOnAction(event -> ventana.abrirVentanas(btnSalir,pathLogin, "Login", true));
+        btnBaja.setOnAction(event ->
+        {
+            userDao.baja();
+            ventana.abrirVentanas(btnSalir,pathLogin, "Login", true);
+        });
+        btnEditar.setOnAction(event ->
+                {
+                    activarEdit(true);
+                });
 
-        //--------------------- ACIONES TABLA Y COMBO --------------------------------------------------------
+        btnAceptar.setOnAction(event ->
+                {
+                    activarEdit(false);
+                    String nombre = editNombre.getText();
+                    String dni = editDNI.getText();
+                    String telf = editTelef.getText();
+                    String mail = editMail.getText();
+                    String newPass = editNewPass.getText();
 
+                    if(newPass.isEmpty())
+                    {
+                        newPass = editPass.getText();
+                    }
 
+                    Jugador jugador = new Jugador(nombre, dni, telf, mail, newPass);
+
+                    userDao.actualizarDatos(jugador);
+                });
+    }
+
+    private void activarEdit(boolean activar)
+    {
+        editNewPass.editableProperty().set(activar);
+        editMail.editableProperty().set(activar);
+        editTelef.editableProperty().set(activar);
+        editNombre.editableProperty().set(activar);
+        editDNI.editableProperty().set(activar);
+        btnAceptar.disableProperty().set(!activar);
+        btnEditar.disableProperty().set(activar);
     }
 
     private void initGUI()
     {
-        comboToreno.setItems(listaTorneos);
-        comboFormato.getSelectionModel().select(0);
-
         editNombre.setText(jugador.getNombre());
         editDNI.setText(jugador.getDni());
         editTelef.setText(jugador.getTelf());
@@ -118,10 +138,8 @@ public class UserController implements Initializable {
         ventana = new VentanasController();
         userDao = new UserDao();
 
-        DatosAdmin.vaciarLista();
-
         jugador = userDao.cargarUsuario(DatosJugador.getIdJugador());
-        listaTorneos = DatosJugador.filtroTorneoJugador(DatosJugador.getIdJugador());
-        listaFormato = FXCollections.observableArrayList();
+        listaHistorial= FXCollections.observableArrayList();
+        listaHistorial.setAll(userDao.cargarClasificacion());
     }
 }

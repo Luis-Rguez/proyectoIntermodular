@@ -66,8 +66,14 @@ public class LoginController implements Initializable {
                 abrirVentana(ventanaArbitro);
             } else if((dato = usuarioDao.getLogin(editMail.getText(), editPass.getText(), "Jugadores","id_Jugador")) !=0)
             {
-                DatosJugador.setIdJugador(dato);
-                abrirVentana(ventanaJugador);
+                if (!editMail.getText().equals("xxxxxx") && !editPass.getText().equals("xxxxxx"))
+                {
+                    DatosJugador.setIdJugador(dato);
+                    abrirVentana(ventanaJugador);
+                }else
+                {
+                    ventanasAciones.ventanaWarning("Usuario Incorrecto", "Por favor, Verifique su Contraseña y su Password.");
+                }
             }else
             {
                 ventanasAciones.ventanaWarning("Usuario Incorrecto", "Por favor, Verifique su Contraseña y su Password.");
@@ -91,6 +97,7 @@ public class LoginController implements Initializable {
             ventana.setTitle("Principal");
             ventana.show();
             ((Stage)btnCerrar.getScene().getWindow()).close();
+
 
         } catch (IOException e) {
             ventanasAciones.ventanaError("Ha ocurrido un Incoveniente. \n\n " + e.getMessage());

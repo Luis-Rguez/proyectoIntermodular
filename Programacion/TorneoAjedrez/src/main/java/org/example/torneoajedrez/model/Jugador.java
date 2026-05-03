@@ -29,6 +29,10 @@ public class Jugador extends Usuario{
         listaTorneo = new ArrayList<>();
     }
 
+    public Jugador(String nombre, String dni, String telf, String mail, String pass) {
+        super(nombre, dni, telf, mail, pass);
+    }
+
     @Override
     public String toString() {
         return getNombre();

@@ -11,17 +11,6 @@ import org.example.torneoajedrez.model.Torneo;
 public class DatosJugador {
 
     private static int idJugador;
-    private static UserDao userDao = new UserDao();
-    private static ObservableList<Torneo> listaTorneoJugador = FXCollections.observableArrayList();
-
-    public static ObservableList<Torneo> filtroTorneoJugador(int idJugador)
-    {
-        listaTorneoJugador.setAll(userDao.cargarTorneos(idJugador));
-        //listaTorneoJugador.setAll(userDao.cargarFormato(idJugador));
-        //listaTorneoJugador.setAll(userDao.cargarPartidas(idJugador));
-        //listaTorneoJugador.setAll(userDao.cargarMovimientos(idJugador));
-        return listaTorneoJugador;
-    }
 
     public static int getIdJugador() {return idJugador;}
 
