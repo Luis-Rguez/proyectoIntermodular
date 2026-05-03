@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<usuarios>
+
+    <usuario id="1">
+        <nombre>Mario</nombre>
+        <apellido>Kart</apellido>
+        <dni>15546798B</dni>
+        <mail>mariokart@example.com</mail>
+        <telefono>604587491</telefono>
+        <password>4444</password>
+        <edad>32</edad>
+    </usuario>
+
+    <usuario id="2">
+        <nombre>Luigui</nombre>
+        <apellido>Mansion</apellido>
+        <dni>7412558963SB</dni>
+        <mail>luigui@example.com</mail>
+        <telefono>6987415632</telefono>
+        <password>3333</password>
+        <edad>40</edad>
+    </usuario>
+
+    <usuario id="3">
+        <nombre>Peich</nombre>
+        <apellido>Princesa</apellido>
+        <dni>78945632A</dni>
+        <mail>princesa@example.com</mail>
+        <telefono>630123654</telefono>
+        <password>6666</password>
+        <edad>28</edad>
+    </usuario>
+
+    <usuario id="4">
+        <nombre>Toad</nombre>
+        <apellido>Champi</apellido>
+        <dni>741085296</dni>
+        <mail>toad@example.com</mail>
+        <telefono>66415987</telefono>
+        <password>3333</password>
+        <edad>36</edad>
+    </usuario>
+
+</usuarios>
